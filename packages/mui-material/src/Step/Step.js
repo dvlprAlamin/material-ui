@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -49,6 +50,7 @@ const Step = React.forwardRef(function Step(inProps, ref) {
     active: activeProp,
     children,
     className,
+    component = 'div',
     completed: completedProp,
     disabled: disabledProp,
     expanded = false,
@@ -87,12 +89,14 @@ const Step = React.forwardRef(function Step(inProps, ref) {
     completed,
     disabled,
     expanded,
+    component,
   };
 
   const classes = useUtilityClasses(ownerState);
 
   const newChildren = (
     <StepRoot
+      as={component}
       className={clsx(classes.root, className)}
       ref={ref}
       ownerState={ownerState}
@@ -142,6 +146,11 @@ Step.propTypes /* remove-proptypes */ = {
    * Mark the step as completed. Is passed to child components.
    */
   completed: PropTypes.bool,
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component: PropTypes.elementType,
   /**
    * If `true`, the step is disabled, will also disable the button if
    * `StepButton` is a child of `Step`. Is passed to child components.

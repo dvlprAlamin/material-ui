@@ -1,7 +1,7 @@
 {
   "props": {
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "component": { "type": { "name": "elementType" } },
     "disabled": { "type": { "name": "bool" } },
     "error": { "type": { "name": "bool" } },
@@ -13,12 +13,13 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "variant": {
       "type": {
-        "name": "enum",
-        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
+        "name": "union",
+        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'<br>&#124;&nbsp;string"
       }
     }
   },
@@ -43,9 +44,11 @@
     "name": "MuiFormHelperText"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiFormHelperText",
   "forwardsRefTo": "HTMLParagraphElement",
   "filename": "/packages/mui-material/src/FormHelperText/FormHelperText.js",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/material-ui/react-text-field/\">Text fields</a></li></ul>",
+  "demos": "<ul><li><a href=\"/material-ui/react-text-field/\">Text Field</a></li></ul>",
   "cssComponent": false
 }

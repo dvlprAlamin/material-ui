@@ -1,7 +1,7 @@
 {
   "props": {
     "children": { "type": { "name": "custom", "description": "node" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "color": {
       "type": {
         "name": "union",
@@ -9,9 +9,9 @@
       },
       "default": "'default'"
     },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFocusRipple": { "type": { "name": "bool" } },
-    "disableRipple": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFocusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
     "edge": {
       "type": {
         "name": "enum",
@@ -30,7 +30,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "name": "IconButton",
@@ -42,6 +43,10 @@
       "colorInherit",
       "colorPrimary",
       "colorSecondary",
+      "colorError",
+      "colorInfo",
+      "colorSuccess",
+      "colorWarning",
       "disabled",
       "sizeSmall",
       "sizeMedium",
@@ -51,9 +56,11 @@
     "name": "MuiIconButton"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiIconButton",
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/mui-material/src/IconButton/IconButton.js",
   "inheritance": { "component": "ButtonBase", "pathname": "/material-ui/api/button-base/" },
-  "demos": "<ul><li><a href=\"/material-ui/react-button/\">Buttons</a></li></ul>",
+  "demos": "<ul><li><a href=\"/material-ui/react-button/\">Button</a></li></ul>",
   "cssComponent": false
 }

@@ -1,17 +1,15 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { isHostComponent } from '@mui/base';
+import clsx from 'clsx';
+import ModalUnstyled, { modalClasses as modalUnstyledClasses } from '@mui/base/Modal';
+import { isHostComponent, resolveComponentProps } from '@mui/base/utils';
 import { elementAcceptingRef, HTMLElementType } from '@mui/utils';
-import ModalUnstyled, { modalUnstyledClasses } from '@mui/base/ModalUnstyled';
 import styled from '../styles/styled';
 import useThemeProps from '../styles/useThemeProps';
 import Backdrop from '../Backdrop';
 
 export const modalClasses = modalUnstyledClasses;
-
-const extendUtilityClasses = (ownerState) => {
-  return ownerState.classes;
-};
 
 const ModalRoot = styled('div', {
   name: 'MuiModal',
@@ -61,8 +59,13 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
   const props = useThemeProps({ name: 'MuiModal', props: inProps });
   const {
     BackdropComponent = ModalBackdrop,
+    BackdropProps,
+    classes,
+    className,
     closeAfterTransition = false,
     children,
+    container,
+    component,
     components = {},
     componentsProps = {},
     disableAutoFocus = false,
@@ -73,12 +76,20 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
     disableScrollLock = false,
     hideBackdrop = false,
     keepMounted = false,
+    onBackdropClick,
+    onClose,
+    open,
+    slotProps,
+    slots,
+    // eslint-disable-next-line react/prop-types
+    theme,
     ...other
   } = props;
 
   const [exited, setExited] = React.useState(true);
 
   const commonProps = {
+    container,
     closeAfterTransition,
     disableAutoFocus,
     disableEnforceFocus,
@@ -88,6 +99,9 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
     disableScrollLock,
     hideBackdrop,
     keepMounted,
+    onBackdropClick,
+    onClose,
+    open,
   };
 
   const ownerState = {
@@ -96,28 +110,43 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
     exited,
   };
 
-  const classes = extendUtilityClasses(ownerState);
+  const RootSlot = slots?.root ?? components.Root ?? ModalRoot;
+  const BackdropSlot = slots?.backdrop ?? components.Backdrop ?? BackdropComponent;
+
+  const rootSlotProps = slotProps?.root ?? componentsProps.root;
+  const backdropSlotProps = slotProps?.backdrop ?? componentsProps.backdrop;
 
   return (
     <ModalUnstyled
-      components={{
-        Root: ModalRoot,
-        ...components,
+      slots={{
+        root: RootSlot,
+        backdrop: BackdropSlot,
       }}
-      componentsProps={{
-        root: {
-          ...componentsProps.root,
-          ...((!components.Root || !isHostComponent(components.Root)) && {
-            ownerState: { ...componentsProps.root?.ownerState },
-          }),
-        },
+      slotProps={{
+        root: () => ({
+          ...resolveComponentProps(rootSlotProps, ownerState),
+          ...(!isHostComponent(RootSlot) && { as: component, theme }),
+          className: clsx(
+            className,
+            rootSlotProps?.className,
+            classes?.root,
+            !ownerState.open && ownerState.exited && classes?.hidden,
+          ),
+        }),
+        backdrop: () => ({
+          ...BackdropProps,
+          ...resolveComponentProps(backdropSlotProps, ownerState),
+          className: clsx(
+            backdropSlotProps?.className,
+            BackdropProps?.className,
+            classes?.backdrop,
+          ),
+        }),
       }}
-      BackdropComponent={BackdropComponent}
       onTransitionEnter={() => setExited(false)}
       onTransitionExited={() => setExited(true)}
       ref={ref}
       {...other}
-      classes={classes}
       {...commonProps}
     >
       {children}
@@ -132,6 +161,8 @@ Modal.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * A backdrop component. This prop enables custom backdrop rendering.
+   * @deprecated Use `slots.backdrop` instead. While this prop currently works, it will be removed in the next major version.
+   * Use the `slots.backdrop` prop to make your application ready for the next version of Material UI.
    * @default styled(Backdrop, {
    *   name: 'MuiModal',
    *   slot: 'Backdrop',
@@ -145,6 +176,7 @@ Modal.propTypes /* remove-proptypes */ = {
   BackdropComponent: PropTypes.elementType,
   /**
    * Props applied to the [`Backdrop`](/material-ui/api/backdrop/) element.
+   * @deprecated Use `slotProps.backdrop` instead.
    */
   BackdropProps: PropTypes.object,
   /**
@@ -156,24 +188,43 @@ Modal.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   /**
+   * @ignore
+   */
+  className: PropTypes.string,
+  /**
    * When set to true the Modal waits until a nested Transition is completed before closing.
    * @default false
    */
   closeAfterTransition: PropTypes.bool,
   /**
-   * The components used for each slot inside the Modal.
+   * The component used for the root node.
    * Either a string to use a HTML element or a component.
+   */
+  component: PropTypes.elementType,
+  /**
+   * The components used for each slot inside.
+   *
+   * This prop is an alias for the `slots` prop.
+   * It's recommended to use the `slots` prop instead.
+   *
    * @default {}
    */
   components: PropTypes.shape({
+    Backdrop: PropTypes.elementType,
     Root: PropTypes.elementType,
   }),
   /**
-   * The props used for each slot inside the Modal.
+   * The extra props for the slot components.
+   * You can override the existing props or add new ones.
+   *
+   * This prop is an alias for the `slotProps` prop.
+   * It's recommended to use the `slotProps` prop instead, as `componentsProps` will be deprecated in the future.
+   *
    * @default {}
    */
   componentsProps: PropTypes.shape({
-    root: PropTypes.object,
+    backdrop: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   }),
   /**
    * An HTML element or function that returns one.
@@ -251,9 +302,34 @@ Modal.propTypes /* remove-proptypes */ = {
    */
   onClose: PropTypes.func,
   /**
+   * A function called when a transition enters.
+   */
+  onTransitionEnter: PropTypes.func,
+  /**
+   * A function called when a transition has exited.
+   */
+  onTransitionExited: PropTypes.func,
+  /**
    * If `true`, the component is shown.
    */
   open: PropTypes.bool.isRequired,
+  /**
+   * The props used for each slot inside the Modal.
+   * @default {}
+   */
+  slotProps: PropTypes.shape({
+    backdrop: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  }),
+  /**
+   * The components used for each slot inside the Modal.
+   * Either a string to use a HTML element or a component.
+   * @default {}
+   */
+  slots: PropTypes.shape({
+    backdrop: PropTypes.elementType,
+    root: PropTypes.elementType,
+  }),
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

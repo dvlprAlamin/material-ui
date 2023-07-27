@@ -1,7 +1,7 @@
 {
   "props": {
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "color": {
       "type": {
         "name": "union",
@@ -18,7 +18,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "name": "FormLabel",
@@ -42,9 +43,11 @@
     "name": "MuiFormLabel"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiFormLabel",
   "forwardsRefTo": "HTMLLabelElement",
   "filename": "/packages/mui-material/src/FormLabel/FormLabel.js",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/material-ui/react-checkbox/\">Checkboxes</a></li>\n<li><a href=\"/material-ui/react-radio-button/\">Radio buttons</a></li>\n<li><a href=\"/material-ui/react-switch/\">Switches</a></li></ul>",
+  "demos": "<ul><li><a href=\"/material-ui/react-checkbox/\">Checkbox</a></li>\n<li><a href=\"/material-ui/react-radio-button/\">Radio Group</a></li>\n<li><a href=\"/material-ui/react-switch/\">Switch</a></li></ul>",
   "cssComponent": false
 }

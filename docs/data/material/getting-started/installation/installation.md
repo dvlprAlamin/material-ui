@@ -2,45 +2,110 @@
 
 <p class="description">Install Material UI, the world's most popular React UI framework.</p>
 
-Material UI is available as an [npm package](https://www.npmjs.com/package/@mui/material).
+:::warning
+We are currently working on supporting React Server Components in Material UI.
 
-## npm
+All components and hooks are exported as [Client Components](https://nextjs.org/docs/getting-started/react-essentials#client-components) with the `"use client"` directive.
+If you're using Next.js 13.4 or later, check out the [Next.js App Router guide](/material-ui/guides/next-js-app-router/).
 
-To install and save in your `package.json` dependencies, run the command below using **npm**:
+:::
 
-```sh
+## Default installation
+
+Run one of the following commands to add Material UI to your project:
+
+<codeblock storageKey="package-manager">
+
+```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
 
-Or **yarn**:
-
-```sh
+```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
 
-<!-- #react-peer-version -->
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
 
-Please note that [react](https://www.npmjs.com/package/react) >= 17.0.0 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.0 are peer dependencies.
+</codeblock>
 
-Material UI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+## With styled-components
 
-```sh
+Material UI uses [Emotion](https://emotion.sh/) as its default styling engine.
+If you want to use [styled-components](https://styled-components.com/) instead, run one of the following commands:
+
+<codeblock storageKey="package-manager">
+
+```bash npm
 npm install @mui/material @mui/styled-engine-sc styled-components
 ```
 
-```sh
+```bash yarn
 yarn add @mui/material @mui/styled-engine-sc styled-components
 ```
 
-:::info
-💡 Take a look at the [Styled Engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
+```bash pnpm
+pnpm add @mui/material @mui/styled-engine-sc styled-components
+```
+
+</codeblock>
+
+:::warning
+Visit the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure styled-components.
 :::
+
+## Peer dependencies
+
+<!-- #react-peer-version -->
+
+Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
+
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
+```
 
 ## Roboto font
 
-Material UI was designed with the [Roboto](https://fonts.google.com/specimen/Roboto)
-font in mind. So be sure to follow [these instructions](/material-ui/react-typography/#general).
-For instance, via Google Web Fonts:
+Material UI is designed to use the [Roboto](https://fonts.google.com/specimen/Roboto)
+font by default.
+You may add it to your project with npm via [Fontsource](https://fontsource.org/), or with the Google Fonts CDN.
+
+<codeblock storageKey="package-manager">
+
+```bash npm
+npm install @fontsource/roboto
+```
+
+```bash yarn
+yarn add @fontsource/roboto
+```
+
+```bash pnpm
+pnpm add @fontsource/roboto
+```
+
+</codeblock>
+
+Then you can import it in your entry point like this:
+
+```tsx
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+```
+
+:::info
+Fontsource can be configured to load specific subsets, weights and styles. Material UI's default typography configuration relies only on the 300, 400, 500, and 700 font weights.
+:::
+
+### Google Web Fonts
+
+To install the Roboto font in your project using the Google Web Fonts CDN, add the following code snippet inside your project's `<head />` tag:
 
 ```html
 <link
@@ -49,10 +114,33 @@ For instance, via Google Web Fonts:
 />
 ```
 
-## Font icons
+## Icons
 
-To use the font `Icon` component, you must first add the [Material icons](https://fonts.google.com/icons) font.
-Here are [some instructions](/material-ui/icons/#font-icons)
+To use the [font Icon component](/material-ui/icons/#icon-font-icons) or the prebuilt SVG Material Icons (such as those found in the [icon demos](/material-ui/icons/)), you must first install the [Material Icons](https://fonts.google.com/icons?icon.set=Material+Icons) font.
+You can do so with npm, or with the Google Web Fonts CDN.
+
+<codeblock storageKey="package-manager">
+
+```bash npm
+npm install @mui/icons-material
+```
+
+```bash yarn
+yarn add @mui/icons-material
+```
+
+```bash pnpm
+pnpm add @mui/icons-material
+```
+
+</codeblock>
+
+### Google Web Fonts
+
+To install the Material Icons font in your project using the Google Web Fonts CDN, add the following code snippet inside your project's `<head />` tag:
+
+To use the font `Icon` component, you must first add the [Material Icons](https://fonts.google.com/icons?icon.set=Material+Icons) font.
+Here are [some instructions](/material-ui/icons/#icon-font-icons)
 on how to do so.
 For instance, via Google Web Fonts:
 
@@ -63,54 +151,23 @@ For instance, via Google Web Fonts:
 />
 ```
 
-## SVG icons
-
-In order to use prebuilt SVG Material icons, such as those found in the [icons demos](/material-ui/icons/)
-you must first install the [@mui/icons-material](https://www.npmjs.com/package/@mui/icons-material) package:
-
-<!-- #default-branch-switch -->
-
-With **npm**:
-
-```sh
-npm install @mui/icons-material
-```
-
-With **yarn**:
-
-```sh
-yarn add @mui/icons-material
-```
-
 ## CDN
 
-You can start using Material UI with minimal Front-end infrastructure,
-which is great for prototyping.
+You can start using Material UI right away with minimal front-end infrastructure by installing it via CDN, which is a great option for rapid prototyping.
+Follow [this CDN example](https://github.com/mui/material-ui/tree/master/examples/material-via-cdn) to get started.
 
-Two Universal Module Definition (**UMD**) files are provided:
+:::error
+We do _not_ recommend using this approach in production.
+It requires the client to download the entire library—regardless of which components are actually used—which negatively impacts performance and bandwidth utilization.
+:::
+
+Two Universal Module Definition (UMD) files are provided:
 
 - one for development: https://unpkg.com/@mui/material@latest/umd/material-ui.development.js
 - one for production: https://unpkg.com/@mui/material@latest/umd/material-ui.production.min.js
 
-You can follow [this CDN example](https://github.com/mui/material-ui/tree/master/examples/cdn) to quickly get started.
-
-⚠️ Using this approach in **production** is **discouraged** though -
-the client has to download the entire library, regardless of which components are actually used,
-affecting performance and bandwidth utilization.
-
-⚠️ The UMD links are using the `latest` tag to point to the latest version of the library.
-This pointer is **unstable**, it shifts as we release new versions.
+:::warning
+The UMD links use the `latest` tag to point to the latest version of the library.
+This pointer is _unstable_ and subject to change as we release new versions.
 You should consider pointing to a specific version, such as [v5.0.0](https://unpkg.com/@mui/material@5.0.0/umd/material-ui.development.js).
-
-## Design resources
-
-<a href="https://mui.com/store/items/figma-react/?utm_source=docs&utm_medium=referral&utm_campaign=installation-figma" style="margin-left: 8px; margin-top: 8px; display: inline-block;"><img src="/static/images/download-figma.svg" alt="figma" /></a>
-<a href="https://mui.com/store/items/adobe-xd-react/?utm_source=docs&utm_medium=referral&utm_campaign=installation-adobe-xd" style="margin-left: 32px; margin-top: 8px; display: inline-block;"><img src="/static/images/download-adobe-xd.svg" alt="adobe-xd" /></a>
-<a href="https://mui.com/store/items/sketch-react/?utm_source=docs&utm_medium=referral&utm_campaign=installation-sketch" style="margin-left: 32px; margin-top: 8px; display: inline-block;"><img src="/static/images/download-sketch.svg" alt="sketch" /></a>
-
-A set of reusable components for design tools is available, designed to match the React components and to help you craft great products:
-
-- [Figma](https://mui.com/store/items/figma-react/?utm_source=docs&utm_medium=referral&utm_campaign=installation-figma): A large UI kit with over 600 handcrafted Material UI components.
-- [Adobe XD](https://mui.com/store/items/adobe-xd-react/?utm_source=docs&utm_medium=referral&utm_campaign=installation-adobe-xd): A large UI kit with over 600 handcrafted Material UI components.
-- [Sketch](https://mui.com/store/items/sketch-react/?utm_source=docs&utm_medium=referral&utm_campaign=installation-sketch): A large UI kit with over 600 handcrafted Material UI symbols.
-- [UXPin](https://www.uxpin.com/merge/mui-library): A large UI kit of Material UI components. The design tool renders the components in a web runtime. It uses the same React implementation as your production environment.
+:::

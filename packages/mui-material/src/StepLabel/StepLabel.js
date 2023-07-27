@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -28,8 +29,15 @@ const useUtilityClasses = (ownerState) => {
       disabled && 'disabled',
       alternativeLabel && 'alternativeLabel',
     ],
-    iconContainer: ['iconContainer', alternativeLabel && 'alternativeLabel'],
-    labelContainer: ['labelContainer'],
+    iconContainer: [
+      'iconContainer',
+      active && 'active',
+      completed && 'completed',
+      error && 'error',
+      disabled && 'disabled',
+      alternativeLabel && 'alternativeLabel',
+    ],
+    labelContainer: ['labelContainer', alternativeLabel && 'alternativeLabel'],
   };
 
   return composeClasses(slots, getStepLabelUtilityClass, classes);
@@ -77,7 +85,6 @@ const StepLabelLabel = styled('span', {
     fontWeight: 500,
   },
   [`&.${stepLabelClasses.alternativeLabel}`]: {
-    textAlign: 'center',
     marginTop: 16,
   },
   [`&.${stepLabelClasses.error}`]: {
@@ -105,6 +112,9 @@ const StepLabelLabelContainer = styled('span', {
 })(({ theme }) => ({
   width: '100%',
   color: (theme.vars || theme).palette.text.secondary,
+  [`&.${stepLabelClasses.alternativeLabel}`]: {
+    textAlign: 'center',
+  },
 }));
 
 const StepLabel = React.forwardRef(function StepLabel(inProps, ref) {
@@ -116,6 +126,7 @@ const StepLabel = React.forwardRef(function StepLabel(inProps, ref) {
     error = false,
     icon: iconProp,
     optional,
+    slotProps = {},
     StepIconComponent: StepIconComponentProp,
     StepIconProps,
     ...other
@@ -143,6 +154,8 @@ const StepLabel = React.forwardRef(function StepLabel(inProps, ref) {
 
   const classes = useUtilityClasses(ownerState);
 
+  const labelSlotProps = slotProps.label ?? componentsProps.label;
+
   return (
     <StepLabelRoot
       className={clsx(classes.root, className)}
@@ -164,9 +177,9 @@ const StepLabel = React.forwardRef(function StepLabel(inProps, ref) {
       <StepLabelLabelContainer className={classes.labelContainer} ownerState={ownerState}>
         {children ? (
           <StepLabelLabel
-            className={classes.label}
             ownerState={ownerState}
-            {...componentsProps.label}
+            {...labelSlotProps}
+            className={clsx(classes.label, labelSlotProps?.className)}
           >
             {children}
           </StepLabelLabel>
@@ -214,6 +227,13 @@ StepLabel.propTypes /* remove-proptypes */ = {
    * The optional node to display.
    */
   optional: PropTypes.node,
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps: PropTypes.shape({
+    label: PropTypes.object,
+  }),
   /**
    * The component to render in place of the [`StepIcon`](/material-ui/api/step-icon/).
    */

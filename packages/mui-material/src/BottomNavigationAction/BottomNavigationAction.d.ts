@@ -6,10 +6,10 @@ import { OverrideProps } from '../OverridableComponent';
 import { BottomNavigationActionClasses } from './bottomNavigationActionClasses';
 
 export type BottomNavigationActionTypeMap<
-  P,
-  D extends React.ElementType,
+  AdditionalProps,
+  DefaultComponent extends React.ElementType,
 > = ExtendButtonBaseTypeMap<{
-  props: P & {
+  props: AdditionalProps & {
     /**
      * This prop isn't supported.
      * Use the `component` prop if you need to change the children structure.
@@ -44,14 +44,14 @@ export type BottomNavigationActionTypeMap<
      */
     value?: any;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }>;
 
 /**
  *
  * Demos:
  *
- * - [Bottom navigation](https://mui.com/material-ui/react-bottom-navigation/)
+ * - [Bottom Navigation](https://mui.com/material-ui/react-bottom-navigation/)
  *
  * API:
  *
@@ -63,8 +63,8 @@ declare const BottomNavigationAction: ExtendButtonBase<
 >;
 
 export type BottomNavigationActionProps<
-  D extends React.ElementType = ButtonBaseTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<BottomNavigationActionTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = ButtonBaseTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<BottomNavigationActionTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default BottomNavigationAction;

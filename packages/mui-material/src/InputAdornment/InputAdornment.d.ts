@@ -4,8 +4,11 @@ import { OverridableComponent, OverrideProps } from '../OverridableComponent';
 import { Theme } from '..';
 import { InputAdornmentClasses } from './inputAdornmentClasses';
 
-export interface InputAdornmentTypeMap<P = {}, D extends React.ElementType = 'div'> {
-  props: P & {
+export interface InputAdornmentTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'div',
+> {
+  props: AdditionalProps & {
     /**
      * Override or extend the styles applied to the component.
      */
@@ -40,13 +43,13 @@ export interface InputAdornmentTypeMap<P = {}, D extends React.ElementType = 'di
      */
     variant?: 'standard' | 'outlined' | 'filled';
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 /**
  *
  * Demos:
  *
- * - [Text fields](https://mui.com/material-ui/react-text-field/)
+ * - [Text Field](https://mui.com/material-ui/react-text-field/)
  *
  * API:
  *
@@ -55,8 +58,8 @@ export interface InputAdornmentTypeMap<P = {}, D extends React.ElementType = 'di
 declare const InputAdornment: OverridableComponent<InputAdornmentTypeMap>;
 
 export type InputAdornmentProps<
-  D extends React.ElementType = InputAdornmentTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<InputAdornmentTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = InputAdornmentTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<InputAdornmentTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default InputAdornment;

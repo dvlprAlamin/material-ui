@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -67,7 +68,7 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
     onChange,
     onFocus,
     readOnly,
-    required,
+    required = false,
     tabIndex,
     type,
     value,
@@ -159,7 +160,7 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
         defaultChecked={defaultChecked}
         className={classes.input}
         disabled={disabled}
-        id={hasLabelFor && id}
+        id={hasLabelFor ? id : undefined}
         name={name}
         onChange={handleInputChange}
         readOnly={readOnly}

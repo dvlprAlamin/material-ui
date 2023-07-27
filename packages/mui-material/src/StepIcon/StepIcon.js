@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -98,8 +99,9 @@ const StepIcon = React.forwardRef(function StepIcon(inProps, ref) {
         <StepIconText
           className={classes.text}
           x="12"
-          y="16"
+          y="12"
           textAnchor="middle"
+          dominantBaseline="central"
           ownerState={ownerState}
         >
           {icon}

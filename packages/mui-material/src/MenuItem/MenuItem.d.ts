@@ -4,8 +4,11 @@ import { ExtendButtonBase, ExtendButtonBaseTypeMap } from '../ButtonBase';
 import { OverrideProps } from '../OverridableComponent';
 import { MenuItemClasses } from './menuItemClasses';
 
-export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = ExtendButtonBaseTypeMap<{
-  props: P & {
+export type MenuItemTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'li',
+> = ExtendButtonBaseTypeMap<{
+  props: AdditionalProps & {
     /**
      * If `true`, the list item is focused during the first mount.
      * Focus will also be triggered if the value changes from false to true.
@@ -38,7 +41,7 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Extend
      */
     divider?: boolean;
     /**
-     * Use to apply selected styling.
+     * If `true`, the component is selected.
      * @default false
      */
     selected?: boolean;
@@ -47,14 +50,14 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Extend
      */
     sx?: SxProps<Theme>;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }>;
 
 /**
  *
  * Demos:
  *
- * - [Menus](https://mui.com/material-ui/react-menu/)
+ * - [Menu](https://mui.com/material-ui/react-menu/)
  *
  * API:
  *
@@ -64,8 +67,8 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Extend
 declare const MenuItem: ExtendButtonBase<MenuItemTypeMap>;
 
 export type MenuItemProps<
-  D extends React.ElementType = MenuItemTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<MenuItemTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = MenuItemTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<MenuItemTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default MenuItem;

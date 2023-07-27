@@ -6,17 +6,15 @@
 
 The community is your first stop for questions and advice about the framework. Welcome to the community!
 
-### StackOverflow
+### Stack Overflow
 
-For crowdsourced answers from expert MUI developers in our community.
-StackOverflow is also visited from time to time by the maintainers of MUI.
+For crowdsourced answers from expert Material UI developers in our community.
+Stack Overflow is also visited from time to time by the maintainers of Material UI.
 
 [Post a question](https://stackoverflow.com/questions/tagged/mui)
 
-:::info
-💡 **Tip**:
-
-If you're using an older version and use external resources (such as StackOverflow) for help with it, you may find answers with links that direct you to content that no longer exists in the latest version of the documentation. To easily access any previous version of the docs, simply add `v[number]` at the beginning of the URL, like so: [v4.mui.com](https://v4.mui.com/).
+:::success
+If you're using an older version and use external resources (such as Stack Overflow) for help with it, you may find answers with links that direct you to content that no longer exists in the latest version of the documentation. To easily access any previous version of the docs, simply add `v[number]` at the beginning of the URL, like so: [v4.mui.com](https://v4.mui.com/).
 
 :::
 
@@ -45,9 +43,9 @@ Stay up to date with the development of the library by following the blog.
 
 ### Resources 📖
 
-New to MUI? It's easy to learn if you know where to start!
+New to Material UI? It's easy to learn if you know where to start!
 
-[Learn MUI](/material-ui/getting-started/learn/)
+[Learn Material UI](/material-ui/getting-started/learn/)
 
 ### Twitter
 
@@ -59,19 +57,24 @@ Receive the latest news on MUI.
 
 Find details on the [supported versions](/versions/#supported-versions).
 
-## Professional support (premium)
+## Paid support
 
 ### Pro/Premium plans
 
 MUI X comes in [three plans](https://mui.com/pricing/).
-The support available on the Community plan is mostly made possible thanks to people like you: the community. It's described in more detail in the above section. The maintainers of MUI focuses on solving the root issues, not direct support.
+The support available under the Community plan is made possible thanks to people like you: the community.
+This is described in more detail in the section above.
+MUI X maintainers focus on solving root issues rather than offering direct support to the community at large.
 
-The Pro plan allows developers to license extra features that are challenging to find in the OSS space.
-The maintainers of MUI provide support for these paid features.
-They aim for a similar quality of experience to the one provided by the community on the open-source modules
-however no SLAs are provided.
+The paid plans offer developers advanced components and extra features that are challenging to find in OSS.
+To provide a similar quality of experience to the one provided by the community for MIT licensed code,
+the developers of MUI X provide support for the advanced components only.
+Technical support for MUI Core components is **not** included.
 
-The Premium plan goes one step further by providing SLAs on the quality of the support.
+The Premium plan provides developers with the highest priority for support tickets.
+No SLAs are provided yet; it's coming.
+
+Please visit [the MUI X Support page](https://mui.com/x/introduction/support/#technical-support) for more detailed information on technical support.
 
 ### Tidelift subscription
 
@@ -105,13 +108,13 @@ Request a demo
 
 ### Custom work 🛠
 
-Tweak MUI to meet specific requirements. Give us a summary of your needs and we'll help you if we can. We might:
+Tweak MUI's component libraries to meet specific requirements. Give us a summary of your needs and we'll help you if we can. We might:
 
 - Give you an estimate of time and price if the work is straightforward
-- Suggest alternatives that might not require MUI
+- Suggest alternatives that might not require MUI components
 - Decline the work due to timing or relevancy
 
-Note that work must be MUI related.
+Note that work must be MUI-related.
 We don't accept general React development work.
 Our contracting price is $200/hour or $1,500/day.
 

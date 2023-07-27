@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -179,7 +180,10 @@ FormHelperText.propTypes /* remove-proptypes */ = {
   /**
    * The variant to use.
    */
-  variant: PropTypes.oneOf(['filled', 'outlined', 'standard']),
+  variant: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.oneOf(['filled', 'outlined', 'standard']),
+    PropTypes.string,
+  ]),
 };
 
 export default FormHelperText;

@@ -11,25 +11,22 @@ import SponsorCard from 'docs/src/components/home/SponsorCard';
 
 const DIAMONDs = [
   {
-    src: '/static/sponsors/octopus.svg',
-    srcSet: '/static/sponsors/octopus.svg',
+    src: '/static/sponsors/octopus-square.svg',
     name: 'Octopus Deploy',
     description: 'A unified DevOps automation platform for your team.',
     href: 'https://octopus.com/?utm_source=MUI&utm_medium=referral&utm_content=homepage',
   },
   {
     src: '/static/sponsors/doit-square.svg',
-    srcSet: '/static/sponsors/doit-square.svg',
     name: 'Doit International',
     description: 'Management platform for Google Cloud and AWS.',
-    href: 'https://www.doit-intl.com/flexsave/?utm_source=MUI&utm_medium=referral&utm_content=homepage',
+    href: 'https://www.doit.com/flexsave/?utm_source=MUI&utm_medium=referral&utm_content=homepage',
   },
   {
     src: 'https://brand.zesty.io/zesty-io-logo.svg',
-    srcSet: 'https://brand.zesty.io/zesty-io-logo.svg',
     name: 'Zesty.io',
     description: 'The only Next.js CMS you need.',
-    href: 'https://www.zesty.io/integrations/nextjs-cms/?utm_source=mui&utm_medium=referral&utm_campaign=sponsor',
+    href: 'https://www.zesty.io/integrations/mui-nextjs/?utm_source=mui&utm_medium=referral&utm_campaign=sponsor',
   },
 ];
 
@@ -43,22 +40,23 @@ export default function DiamondSponsors() {
   const spotIsAvailable = maxNumberOfDiamondSponsors > DIAMONDs.length;
   return (
     <Box ref={ref}>
-      <Box sx={{ mb: 1 }}>
-        <Typography
-          component="h3"
-          variant="h5"
-          fontWeight="extraBold"
-          sx={{
-            color: (theme) =>
-              theme.palette.mode === 'dark'
-                ? theme.palette.primary[400]
-                : theme.palette.primary[500],
-          }}
-        >
-          Diamond
-        </Typography>
-      </Box>
-      <Grid container spacing={{ xs: 2, md: 4 }}>
+      <Typography
+        component="h3"
+        variant="h6"
+        fontWeight="bold"
+        sx={(theme) => ({
+          mt: 4,
+          mb: 2,
+          background: `linear-gradient(90deg, ${(theme.vars || theme).palette.primary[400]} 50%, ${
+            (theme.vars || theme).palette.primary[700]
+          } 100%)`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        })}
+      >
+        Diamond
+      </Typography>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
         {DIAMONDs.map((item) => (
           <Grid item key={item.name} xs={12} sm={6} md={4}>
             <SponsorCard logoSize={64} inView={inView} item={item} />
@@ -68,29 +66,32 @@ export default function DiamondSponsors() {
           <Grid item xs={12} sm={6} md={4}>
             <Paper
               variant="outlined"
-              sx={{
+              sx={(theme) => ({
                 p: 2,
                 display: 'flex',
                 alignItems: 'center',
                 height: '100%',
                 borderStyle: 'dashed',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark' ? 'primaryDark.400' : 'grey.300',
-              }}
+                borderColor: 'grey.300',
+                ...theme.applyDarkStyles({
+                  borderColor: 'primaryDark.400',
+                }),
+              })}
             >
               <IconButton
                 aria-label="Become MUI sponsor"
                 component="a"
-                href="mailto:diamond@mui.com"
+                href="mailto:sales@mui.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 color="primary"
-                sx={{
+                sx={(theme) => ({
                   mr: 2,
                   border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark' ? 'primaryDark.400' : 'grey.300',
-                }}
+                  ...theme.applyDarkStyles({
+                    borderColor: 'primaryDark.400',
+                  }),
+                })}
               >
                 <AddRounded />
               </IconButton>
@@ -100,8 +101,8 @@ export default function DiamondSponsors() {
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   To join us, contact us at{' '}
-                  <Link href="mailto:diamond@mui.com" target="_blank" rel="noopener noreferrer">
-                    diamond@mui.com
+                  <Link href="mailto:sales@mui.com" target="_blank" rel="noopener noreferrer">
+                    sales@mui.com
                   </Link>{' '}
                   for pre-approval.
                 </Typography>

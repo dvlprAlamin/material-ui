@@ -1,21 +1,23 @@
 import * as React from 'react';
 
-export const DEFAULT_MODE_STORAGE_KEY = 'mui-mode';
-export const DEFAULT_COLOR_SCHEME_STORAGE_KEY = 'mui-color-scheme';
-export const DEFAULT_ATTRIBUTE = 'data-mui-color-scheme';
+export const DEFAULT_MODE_STORAGE_KEY = 'mode';
+export const DEFAULT_COLOR_SCHEME_STORAGE_KEY = 'color-scheme';
+export const DEFAULT_ATTRIBUTE = 'data-color-scheme';
 
 export interface GetInitColorSchemeScriptOptions {
   /**
-   * If `true`, the initial color scheme is set to the user's prefers-color-scheme mode
-   * @default false
+   * The mode to be used for the first visit
+   * @default 'light'
    */
-  enableSystem?: boolean;
+  defaultMode?: 'light' | 'dark' | 'system';
   /**
    * The default color scheme to be used on the light mode
+   * @default 'light'
    */
   defaultLightColorScheme?: string;
   /**
    * The default color scheme to be used on the dark mode
+   * * @default 'dark'
    */
   defaultDarkColorScheme?: string;
   /**
@@ -25,24 +27,24 @@ export interface GetInitColorSchemeScriptOptions {
   colorSchemeNode?: string;
   /**
    * localStorage key used to store `mode`
-   * @default 'mui-mode'
+   * @default 'mode'
    */
   modeStorageKey?: string;
   /**
    * localStorage key used to store `colorScheme`
-   * @default 'mui-color-scheme'
+   * @default 'color-scheme'
    */
   colorSchemeStorageKey?: string;
   /**
    * DOM attribute for applying color scheme
-   * @default 'data-mui-color-scheme'
+   * @default 'data-color-scheme'
    */
   attribute?: string;
 }
 
 export default function getInitColorSchemeScript(options?: GetInitColorSchemeScriptOptions) {
   const {
-    enableSystem = false,
+    defaultMode = 'light',
     defaultLightColorScheme = 'light',
     defaultDarkColorScheme = 'dark',
     modeStorageKey = DEFAULT_MODE_STORAGE_KEY,
@@ -52,17 +54,21 @@ export default function getInitColorSchemeScript(options?: GetInitColorSchemeScr
   } = options || {};
   return (
     <script
+      key="mui-color-scheme-init"
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
         __html: `(function() { try {
-        var mode = localStorage.getItem('${modeStorageKey}');
+        var mode = localStorage.getItem('${modeStorageKey}') || '${defaultMode}';
+        var cssColorScheme = mode;
         var colorScheme = '';
-        if (mode === 'system' || (!mode && !!${enableSystem})) {
+        if (mode === 'system') {
           // handle system mode
           var mql = window.matchMedia('(prefers-color-scheme: dark)');
           if (mql.matches) {
+            cssColorScheme = 'dark';
             colorScheme = localStorage.getItem('${colorSchemeStorageKey}-dark') || '${defaultDarkColorScheme}';
           } else {
+            cssColorScheme = 'light';
             colorScheme = localStorage.getItem('${colorSchemeStorageKey}-light') || '${defaultLightColorScheme}';
           }
         }

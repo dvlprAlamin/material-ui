@@ -11,10 +11,10 @@ export interface IconButtonPropsColorOverrides {}
 export interface IconButtonPropsSizeOverrides {}
 
 export type IconButtonTypeMap<
-  P = {},
-  D extends React.ElementType = 'button',
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'button',
 > = ExtendButtonBaseTypeMap<{
-  props: P & {
+  props: AdditionalProps & {
     /**
      * The icon to display.
      */
@@ -62,7 +62,7 @@ export type IconButtonTypeMap<
      */
     sx?: SxProps<Theme>;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }>;
 
 /**
@@ -71,7 +71,7 @@ export type IconButtonTypeMap<
  *
  * Demos:
  *
- * - [Buttons](https://mui.com/material-ui/react-button/)
+ * - [Button](https://mui.com/material-ui/react-button/)
  *
  * API:
  *
@@ -81,8 +81,8 @@ export type IconButtonTypeMap<
 declare const IconButton: ExtendButtonBase<IconButtonTypeMap>;
 
 export type IconButtonProps<
-  D extends React.ElementType = IconButtonTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<IconButtonTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = IconButtonTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<IconButtonTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default IconButton;

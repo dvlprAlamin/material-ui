@@ -2,7 +2,7 @@
   "props": {
     "avatar": { "type": { "name": "element" } },
     "children": { "type": { "name": "custom", "description": "unsupportedProp" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "clickable": { "type": { "name": "bool" } },
     "color": {
       "type": {
@@ -13,7 +13,7 @@
     },
     "component": { "type": { "name": "elementType" } },
     "deleteIcon": { "type": { "name": "element" } },
-    "disabled": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
     "icon": { "type": { "name": "element" } },
     "label": { "type": { "name": "node" } },
     "onDelete": { "type": { "name": "func" } },
@@ -24,11 +24,13 @@
       },
       "default": "'medium'"
     },
+    "skipFocusWhenDisabled": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "variant": {
       "type": {
@@ -44,8 +46,12 @@
       "root",
       "sizeSmall",
       "sizeMedium",
+      "colorError",
+      "colorInfo",
       "colorPrimary",
       "colorSecondary",
+      "colorSuccess",
+      "colorWarning",
       "disabled",
       "clickable",
       "clickableColorPrimary",
@@ -57,6 +63,8 @@
       "filled",
       "outlinedPrimary",
       "outlinedSecondary",
+      "filledPrimary",
+      "filledSecondary",
       "avatar",
       "avatarSmall",
       "avatarMedium",
@@ -77,15 +85,19 @@
       "deleteIconColorSecondary",
       "deleteIconOutlinedColorPrimary",
       "deleteIconOutlinedColorSecondary",
+      "deleteIconFilledColorPrimary",
+      "deleteIconFilledColorSecondary",
       "focusVisible"
     ],
     "globalClasses": { "disabled": "Mui-disabled", "focusVisible": "Mui-focusVisible" },
     "name": "MuiChip"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiChip",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/mui-material/src/Chip/Chip.js",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/material-ui/react-chip/\">Chips</a></li></ul>",
+  "demos": "<ul><li><a href=\"/material-ui/react-chip/\">Chip</a></li></ul>",
   "cssComponent": false
 }

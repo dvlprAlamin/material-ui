@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { DistributiveOmit, OverridableStringUnion } from '@mui/types';
+import { OverridableStringUnion } from '@mui/types';
 import { OverridableComponent, OverrideProps } from '@mui/material/OverridableComponent';
 import { PropTypes, Theme } from '..';
-import { PaperProps } from '../Paper';
 import { AppBarClasses } from './appBarClasses';
+import { ExtendPaperTypeMap } from '../Paper/Paper';
 
 export interface AppBarPropsColorOverrides {}
 
-export interface AppBarTypeMap<P = {}, D extends React.ElementType = 'header'> {
-  props: P &
-    DistributiveOmit<PaperProps, 'position' | 'color' | 'classes'> & {
+export type AppBarTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'header',
+> = ExtendPaperTypeMap<
+  {
+    props: AdditionalProps & {
       /**
        * Override or extend the styles applied to the component.
        */
@@ -39,14 +42,16 @@ export interface AppBarTypeMap<P = {}, D extends React.ElementType = 'header'> {
        */
       sx?: SxProps<Theme>;
     };
-  defaultComponent: D;
-}
+    defaultComponent: DefaultComponent;
+  },
+  'position' | 'color' | 'classes'
+>;
 
 /**
  *
  * Demos:
  *
- * - [App bar](https://mui.com/material-ui/react-app-bar/)
+ * - [App Bar](https://mui.com/material-ui/react-app-bar/)
  *
  * API:
  *
@@ -57,8 +62,8 @@ export interface AppBarTypeMap<P = {}, D extends React.ElementType = 'header'> {
 declare const AppBar: OverridableComponent<AppBarTypeMap>;
 
 export type AppBarProps<
-  D extends React.ElementType = AppBarTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<AppBarTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = AppBarTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<AppBarTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default AppBar;

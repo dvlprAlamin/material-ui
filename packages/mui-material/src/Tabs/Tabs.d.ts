@@ -1,13 +1,34 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
+import { SlotComponentProps } from '@mui/base';
+import { OverridableStringUnion } from '@mui/types';
 import { Theme } from '../styles';
 import ButtonBase from '../ButtonBase';
 import { TabScrollButtonProps } from '../TabScrollButton';
 import { OverridableComponent, OverrideProps } from '../OverridableComponent';
 import { TabsClasses } from './tabsClasses';
+import SvgIcon from '../SvgIcon';
 
-export interface TabsTypeMap<P = {}, D extends React.ElementType = typeof ButtonBase> {
-  props: P & {
+export interface TabsPropsIndicatorColorOverrides {}
+
+export interface TabsStartScrollButtonIconSlotPropsOverrides {}
+export interface TabsEndScrollButtonIconSlotPropsOverrides {}
+
+export interface TabsOwnerState extends TabsProps {
+  vertical: boolean;
+  fixed: boolean;
+  hideScrollbar: boolean;
+  scrollableX: boolean;
+  scrollableY: boolean;
+  centered: boolean;
+  scrollButtonsHideMobile: boolean;
+}
+
+export interface TabsTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = typeof ButtonBase,
+> {
+  props: AdditionalProps & {
     /**
      * Callback fired when the component mounts.
      * This is useful when you want to trigger an action programmatically.
@@ -46,10 +67,38 @@ export interface TabsTypeMap<P = {}, D extends React.ElementType = typeof Button
      */
     classes?: Partial<TabsClasses>;
     /**
+     * The components used for each slot inside.
+     * @default {}
+     */
+    slots?: {
+      StartScrollButtonIcon?: React.ElementType;
+      EndScrollButtonIcon?: React.ElementType;
+    };
+    /**
+     * The extra props for the slot components.
+     * You can override the existing props or add new ones.
+     * @default {}
+     */
+    slotProps?: {
+      startScrollButtonIcon?: SlotComponentProps<
+        typeof SvgIcon,
+        TabsStartScrollButtonIconSlotPropsOverrides,
+        TabsOwnerState
+      >;
+      endScrollButtonIcon?: SlotComponentProps<
+        typeof SvgIcon,
+        TabsEndScrollButtonIconSlotPropsOverrides,
+        TabsOwnerState
+      >;
+    };
+    /**
      * Determines the color of the indicator.
      * @default 'primary'
      */
-    indicatorColor?: 'secondary' | 'primary';
+    indicatorColor?: OverridableStringUnion<
+      'secondary' | 'primary',
+      TabsPropsIndicatorColorOverrides
+    >;
     /**
      * Callback fired when the value changes.
      *
@@ -126,7 +175,7 @@ export interface TabsTypeMap<P = {}, D extends React.ElementType = typeof Button
      */
     sx?: SxProps<Theme>;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 
 /**
@@ -147,8 +196,8 @@ export interface TabsActions {
 }
 
 export type TabsProps<
-  D extends React.ElementType = TabsTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<TabsTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = TabsTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<TabsTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default Tabs;

@@ -276,6 +276,7 @@ export interface MuiRenderResult extends RenderResult<typeof queries & typeof cu
 }
 
 export interface MuiRenderToStringResult {
+  container: HTMLElement;
   hydrate(): MuiRenderResult;
 }
 
@@ -356,6 +357,10 @@ interface Clock {
    * Runs the current test suite (i.e. `describe` block) with fake timers.
    */
   withFakeTimers(): void;
+  /**
+   * Restore the real timer
+   */
+  restore(): void;
 }
 
 type ClockConfig = undefined | number | Date;
@@ -372,7 +377,6 @@ function createClock(defaultMode: 'fake' | 'real', config: ClockConfig): Clock {
         // useIsFocusVisible schedules a global timer that needs to persist regardless of whether components are mounted or not.
         // Technically we'd want to reset all modules between tests but we don't have that technology.
         // In the meantime just continue to clear native timers like with did for the past years when using `sinon` < 8.
-        // @ts-expect-error Requires https://github.com/DefinitelyTyped/DefinitelyTyped/pull/57290
         shouldClearNativeTimers: true,
       });
     }
@@ -425,6 +429,9 @@ function createClock(defaultMode: 'fake' | 'real', config: ClockConfig): Clock {
       after(() => {
         mode = defaultMode;
       });
+    },
+    restore() {
+      clock?.restore();
     },
   };
 }
@@ -670,7 +677,7 @@ fireEvent.keyUp = (desiredTarget, options = {}) => {
 
 export function fireTouchChangedEvent(
   target: Element,
-  type: 'touchmove' | 'touchend',
+  type: 'touchstart' | 'touchmove' | 'touchend',
   options: { changedTouches: Array<Pick<TouchInit, 'clientX' | 'clientY'>> },
 ): void {
   const { changedTouches } = options;

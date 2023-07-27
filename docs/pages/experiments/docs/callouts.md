@@ -2,44 +2,66 @@
 
 <p class="description">Type of callouts.</p>
 
-:::error
-❌ **Error callout**
-
-This is an error alert — check it out!
-:::
+## Info
 
 :::info
-ℹ️ **Info callout**
-
-This is an info alert — check it out!
+This is an info callout.
+It says, "Here's a bit of extra insight to help you understand this feature."
+Add some **bold text** and a [link](#link).
 :::
 
-:::warning
-⚠️ **Warning callout**
-
-This is an warning alert — check it out!
+```markup
+:::info
+This is an info callout.
+It says, "Here's a bit of extra insight to help you understand this feature."
+Add some **bold text** and a [link](#link).
 :::
+```
+
+## Success
 
 :::success
-✅ **Success callout**
-
-This is an success alert — check it out!
+This is a success callout.
+It says, "Here's an actionable suggestion to help you succeed."
+Add some **bold text** and a [link](#link).
 :::
 
-:::info
-
-**Title**
-
-Some description
-
-- list item 1
-- list item 2
-  ```js
-  <div>Test</div>
-  ```
-- list item 3
-  ```js
-  <div>Test</div>
-  ```
-
+```markup
+:::success
+This is a success callout.
+It says, "Here's an actionable suggestion to help you succeed."
+Add some **bold text** and a [link](#link).
 :::
+```
+
+## Warning
+
+:::warning
+This is a warning callout.
+It says, "Be careful! Keep this detail in mind to avoid potential issues."
+Add some **bold text** and a [link](#link).
+:::
+
+```markup
+:::warning
+This is a warning callout.
+It says, "Be careful! Keep this detail in mind to avoid potential issues."
+Add some **bold text** and a [link](#link).
+:::
+```
+
+## Error
+
+:::error
+This is an error callout.
+It says, "You will fail if you don't heed this dire warning."
+Add some **bold text** and a [link](#link).
+:::
+
+```markup
+:::error
+This is an error callout.
+It says, "You will fail if you don't heed this dire warning."
+Add some **bold text** and a [link](#link).
+:::
+```

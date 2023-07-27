@@ -6,10 +6,15 @@
  */
 
 /**
- * List of demos to ignore when transpiling
+ * List of demos or folders to ignore when transpiling
  * Example: "app-bar/BottomAppBar.tsx"
  */
-const ignoreList = ['/pages.ts'];
+const ignoreList = [
+  '/pages.ts',
+  'docs/data/joy/getting-started/templates',
+  'docs/data/base/components/select/UnstyledSelectIntroduction.tsx',
+  'docs/data/material/customization/palette',
+];
 
 const fse = require('fs-extra');
 const path = require('path');
@@ -17,7 +22,7 @@ const babel = require('@babel/core');
 const prettier = require('prettier');
 const typescriptToProptypes = require('typescript-to-proptypes');
 const yargs = require('yargs');
-const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
+const { fixBabelGeneratorIssues, fixLineEndings } = require('@mui-internal/docs-utilities');
 
 const tsConfig = typescriptToProptypes.loadConfig(path.resolve(__dirname, '../tsconfig.json'));
 
@@ -27,6 +32,7 @@ const babelConfig = {
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,
+  shouldPrintComment: (comment) => !comment.startsWith(' @babel-ignore-comment-in-output'),
 };
 
 const workspaceRoot = path.join(__dirname, '../../');
@@ -42,7 +48,12 @@ async function getFiles(root) {
         const filePath = path.join(root, name);
         const stat = await fse.stat(filePath);
 
-        if (stat.isDirectory()) {
+        if (
+          stat.isDirectory() &&
+          !ignoreList.some((ignorePath) =>
+            filePath.startsWith(path.normalize(`${workspaceRoot}/${ignorePath}`)),
+          )
+        ) {
           files.push(...(await getFiles(filePath)));
         } else if (
           stat.isFile() &&
@@ -92,7 +103,7 @@ async function transpileFile(tsxPath, program) {
 
     const propTypesAST = typescriptToProptypes.parseFromProgram(tsxPath, program, {
       shouldResolveObject: ({ name }) => {
-        if (name === 'classes') {
+        if (name === 'classes' || name === 'ownerState') {
           return false;
         }
 

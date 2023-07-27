@@ -2,26 +2,26 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import { visuallyHidden } from '@mui/utils';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import IconImage from 'docs/src/components/icon/IconImage';
 import Highlighter from 'docs/src/components/action/Highlighter';
 import Link from 'docs/src/modules/components/Link';
-
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
 import ROUTES from 'docs/src/route';
 
 const SwipeableViews = dynamic(() => import('react-swipeable-views'), { ssr: false });
 
 function ProductItem({
-  'aria-label': label,
+  label,
   icon,
   name,
   description,
   href,
 }: {
-  'aria-label': string;
+  label: string;
   icon: React.ReactNode;
   name: React.ReactNode;
   description: React.ReactNode;
@@ -65,7 +65,6 @@ function ProductItem({
           color="primary"
           variant="body2"
           fontWeight="bold"
-          aria-label={label}
           sx={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -77,7 +76,7 @@ function ProductItem({
             event.stopPropagation();
           }}
         >
-          <span>Learn more</span>{' '}
+          <span>Learn more</span> <Box sx={visuallyHidden}>{label}</Box>
           <KeyboardArrowRightRounded fontSize="small" sx={{ mt: '1px', ml: '2px' }} />
         </Link>
       </span>
@@ -85,7 +84,7 @@ function ProductItem({
   );
 }
 
-const ProductsSwitcher = ({
+function ProductsSwitcher({
   inView = false,
   productIndex,
   setProductIndex,
@@ -93,18 +92,18 @@ const ProductsSwitcher = ({
   inView?: boolean;
   productIndex: number;
   setProductIndex: React.Dispatch<React.SetStateAction<number>>;
-}) => {
+}) {
   const isBelowMd = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
   const productElements = [
     <ProductItem
-      aria-label="Go to core components page"
+      label="by going to the Core components page"
       icon={<IconImage name="product-core" />}
       name="MUI Core"
       description="Foundational components for shipping features faster. Includes Material UI."
       href={ROUTES.productCore}
     />,
     <ProductItem
-      aria-label="Go to advanced components page"
+      label="by going to the Advanced components page"
       icon={<IconImage name="product-advanced" />}
       name={
         <Box component="span" display="inline-flex" alignItems="center">
@@ -115,14 +114,14 @@ const ProductsSwitcher = ({
       href={ROUTES.productAdvanced}
     />,
     <ProductItem
-      aria-label="Go to templates page"
+      label="by going to the templates page"
       icon={<IconImage name="product-templates" />}
       name="Templates"
       description="Professionally designed UI layouts to jumpstart your next project."
       href={ROUTES.productTemplates}
     />,
     <ProductItem
-      aria-label="Go to design-kits page"
+      label="by going to the design-kits page"
       icon={<IconImage name="product-designkits" />}
       name="Design kits"
       description="Bring our components to your favorite design tool."
@@ -178,6 +177,6 @@ const ProductsSwitcher = ({
       </Stack>
     </React.Fragment>
   );
-};
+}
 
 export default ProductsSwitcher;

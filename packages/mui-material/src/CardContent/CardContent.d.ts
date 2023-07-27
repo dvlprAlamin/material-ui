@@ -4,8 +4,11 @@ import { OverridableComponent, OverrideProps } from '../OverridableComponent';
 import { Theme } from '..';
 import { CardContentClasses } from './cardContentClasses';
 
-export interface CardContentTypeMap<P = {}, D extends React.ElementType = 'div'> {
-  props: P & {
+export interface CardContentTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'div',
+> {
+  props: AdditionalProps & {
     /**
      * The content of the component.
      */
@@ -19,13 +22,13 @@ export interface CardContentTypeMap<P = {}, D extends React.ElementType = 'div'>
      */
     sx?: SxProps<Theme>;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 /**
  *
  * Demos:
  *
- * - [Cards](https://mui.com/material-ui/react-card/)
+ * - [Card](https://mui.com/material-ui/react-card/)
  *
  * API:
  *
@@ -34,8 +37,8 @@ export interface CardContentTypeMap<P = {}, D extends React.ElementType = 'div'>
 declare const CardContent: OverridableComponent<CardContentTypeMap>;
 
 export type CardContentProps<
-  D extends React.ElementType = CardContentTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<CardContentTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = CardContentTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<CardContentTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default CardContent;

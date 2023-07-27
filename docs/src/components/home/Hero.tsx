@@ -10,15 +10,22 @@ import GetStartedButtons from 'docs/src/components/home/GetStartedButtons';
 import HeroContainer from 'docs/src/layouts/HeroContainer';
 
 function createLoading(sx: BoxProps['sx']) {
-  return () => (
-    <Box
-      sx={{
-        borderRadius: 1,
-        bgcolor: (theme) => (theme.palette.mode === 'dark' ? 'primaryDark.800' : 'grey.100'),
-        ...sx,
-      }}
-    />
-  );
+  return function Loading() {
+    return (
+      <Box
+        sx={[
+          (theme) => ({
+            borderRadius: 1,
+            bgcolor: 'grey.100',
+            ...theme.applyDarkStyles({
+              bgcolor: 'primaryDark.800',
+            }),
+          }),
+          ...(Array.isArray(sx) ? sx : [sx]),
+        ]}
+      />
+    );
+  };
 }
 
 const TaskCard = dynamic(() => import('../showcase/TaskCard'), {
@@ -49,7 +56,6 @@ const FolderTable = dynamic(() => import('../showcase/FolderTable'), {
   ssr: false,
   loading: createLoading({ width: 360, height: 212 }),
 });
-
 const ThemeDatePicker = dynamic(() => import('../showcase/ThemeDatePicker'), {
   ssr: false,
   loading: createLoading({ width: { md: 360, xl: 400 }, height: 260 }),
@@ -80,51 +86,30 @@ const NotificationCard = dynamic(() => import('../showcase/NotificationCard'), {
 });
 
 export default function Hero() {
-  const frame = React.useRef<null | HTMLDivElement>(null);
   const globalTheme = useTheme();
   const isMdUp = useMediaQuery(globalTheme.breakpoints.up('md'));
-  React.useEffect(() => {
-    let obs: undefined | MutationObserver;
-    function suppressTabIndex() {
-      if (frame.current && isMdUp) {
-        const elements = frame.current.querySelectorAll(
-          'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
-        );
-        elements.forEach((elm) => {
-          elm.setAttribute('tabindex', '-1');
-        });
-      }
-    }
-    if (typeof MutationObserver !== 'undefined' && frame.current) {
-      obs = new MutationObserver(suppressTabIndex);
-      obs.observe(frame.current, { childList: true, subtree: true });
-    }
-    return () => {
-      if (obs) {
-        obs.disconnect();
-      }
-    };
-  }, [isMdUp]);
   return (
     <HeroContainer
+      linearGradient
       left={
         <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
           <Typography variant="h1" sx={{ my: 2, maxWidth: 500 }}>
-            <GradientText>Move faster</GradientText> with intuitive React UI tools
+            <GradientText>Move faster</GradientText> <br />
+            with intuitive React UI tools
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 3, maxWidth: 500 }}>
-            MUI offers a comprehensive suite of UI tools to help you ship new features faster. Start
-            with Material UI, our fully-loaded component library, or bring your own design system to
-            our production-ready components.
+            MUI offers a comprehensive suite of free UI tools to help you ship new features faster.
+            Start with Material UI, our fully-loaded component library, or bring your own design
+            system to our production-ready components.
           </Typography>
-          <GetStartedButtons sx={{ justifyContent: { xs: 'center', md: 'flex-start' } }} />
+          <GetStartedButtons callToAction="Discover the Core libraries" to="/core/" />
         </Box>
       }
       rightSx={{
         p: 3,
         ml: 2,
         minWidth: 2000,
-        overflow: 'scroll',
+        overflow: 'hidden', // the components in the Hero section are mostly illustrative, even though they're interactive. That's why scrolling is disabled.
         '& > div': {
           width: 360,
           display: 'inline-flex',
@@ -139,7 +124,6 @@ export default function Hero() {
           ),
         },
       }}
-      rightRef={frame}
       right={
         <React.Fragment>
           {isMdUp && (

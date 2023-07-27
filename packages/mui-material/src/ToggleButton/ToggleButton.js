@@ -1,3 +1,4 @@
+'use client';
 // @inheritedComponent ButtonBase
 import * as React from 'react';
 import PropTypes from 'prop-types';
@@ -254,7 +255,7 @@ ToggleButton.propTypes /* remove-proptypes */ = {
    * The value to associate with the button when selected in a
    * ToggleButtonGroup.
    */
-  value: PropTypes.any.isRequired,
+  value: PropTypes /* @typescript-to-proptypes-ignore */.any.isRequired,
 };
 
 export default ToggleButton;

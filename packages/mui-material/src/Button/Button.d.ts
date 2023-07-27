@@ -13,10 +13,10 @@ export interface ButtonPropsColorOverrides {}
 export interface ButtonPropsSizeOverrides {}
 
 export type ButtonTypeMap<
-  P = {},
-  D extends React.ElementType = 'button',
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'button',
 > = ExtendButtonBaseTypeMap<{
-  props: P & {
+  props: AdditionalProps & {
     /**
      * The content of the component.
      */
@@ -87,7 +87,7 @@ export type ButtonTypeMap<
       ButtonPropsVariantOverrides
     >;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }>;
 
 /**
@@ -95,25 +95,25 @@ export type ButtonTypeMap<
  * This component has an additional overload if the `href` prop is set which
  * can make extension quite tricky
  */
-export interface ExtendButtonTypeMap<M extends OverridableTypeMap> {
-  props: M['props'] &
-    (M['props'] extends { classes?: Record<string, string> }
+export interface ExtendButtonTypeMap<TypeMap extends OverridableTypeMap> {
+  props: TypeMap['props'] &
+    (TypeMap['props'] extends { classes?: Record<string, string> }
       ? DistributiveOmit<ButtonTypeMap['props'], 'classes'>
       : ButtonTypeMap['props']);
-  defaultComponent: M['defaultComponent'];
+  defaultComponent: TypeMap['defaultComponent'];
 }
 
-export type ExtendButton<M extends OverridableTypeMap> = ((
-  props: { href: string } & OverrideProps<ExtendButtonBaseTypeMap<M>, 'a'>,
+export type ExtendButton<TypeMap extends OverridableTypeMap> = ((
+  props: { href: string } & OverrideProps<ExtendButtonBaseTypeMap<TypeMap>, 'a'>,
 ) => JSX.Element) &
-  OverridableComponent<ExtendButtonBaseTypeMap<M>>;
+  OverridableComponent<ExtendButtonBaseTypeMap<TypeMap>>;
 
 /**
  *
  * Demos:
  *
- * - [Button group](https://mui.com/material-ui/react-button-group/)
- * - [Buttons](https://mui.com/material-ui/react-button/)
+ * - [Button Group](https://mui.com/material-ui/react-button-group/)
+ * - [Button](https://mui.com/material-ui/react-button/)
  *
  * API:
  *
@@ -123,8 +123,8 @@ export type ExtendButton<M extends OverridableTypeMap> = ((
 declare const Button: ExtendButtonBase<ButtonTypeMap>;
 
 export type ButtonProps<
-  D extends React.ElementType = ButtonTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<ButtonTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = ButtonTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<ButtonTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default Button;

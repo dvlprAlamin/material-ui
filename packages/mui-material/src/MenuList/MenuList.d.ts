@@ -2,8 +2,11 @@ import * as React from 'react';
 import { ExtendList, ExtendListTypeMap } from '../List';
 import { OverrideProps } from '../OverridableComponent';
 
-export type MenuListTypeMap<P = {}, D extends React.ElementType = 'ul'> = ExtendListTypeMap<{
-  props: P & {
+export type MenuListTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'ul',
+> = ExtendListTypeMap<{
+  props: AdditionalProps & {
     /**
      * If `true`, will focus the `[role="menu"]` container and move into tab order.
      * @default false
@@ -36,20 +39,20 @@ export type MenuListTypeMap<P = {}, D extends React.ElementType = 'ul'> = Extend
      */
     variant?: 'menu' | 'selectedMenu';
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }>;
 
 export type MenuListClassKey = keyof NonNullable<MenuListTypeMap['props']['classes']>;
 
 /**
- * A permanently displayed menu following https://www.w3.org/TR/wai-aria-practices/#menubutton.
+ * A permanently displayed menu following https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/.
  * It's exposed to help customization of the [`Menu`](https://mui.com/material-ui/api/menu/) component if you
  * use it separately you need to move focus into the component manually. Once
  * the focus is placed inside the component it is fully keyboard accessible.
  *
  * Demos:
  *
- * - [Menus](https://mui.com/material-ui/react-menu/)
+ * - [Menu](https://mui.com/material-ui/react-menu/)
  *
  * API:
  *
@@ -59,8 +62,8 @@ export type MenuListClassKey = keyof NonNullable<MenuListTypeMap['props']['class
 declare const MenuList: ExtendList<MenuListTypeMap>;
 
 export type MenuListProps<
-  D extends React.ElementType = MenuListTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<MenuListTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = MenuListTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<MenuListTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default MenuList;

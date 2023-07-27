@@ -1,18 +1,37 @@
-import PopperUnstyled, { PopperUnstyledProps } from '@mui/base/PopperUnstyled';
+'use client';
+import BasePopper, { PopperProps as BasePopperProps } from '@mui/base/Popper';
 import { Direction, SxProps, useThemeWithoutDefault as useTheme } from '@mui/system';
 import { HTMLElementType, refType } from '@mui/utils';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { styled, Theme, useThemeProps } from '../styles';
 
-export type PopperProps = Omit<PopperUnstyledProps, 'direction'> & {
+export type PopperProps = Omit<BasePopperProps, 'direction'> & {
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component?: React.ElementType;
+  /**
+   * The components used for each slot inside the Popper.
+   * Either a string to use a HTML element or a component.
+   * @default {}
+   */
+  components?: {
+    Root?: React.ElementType;
+  };
+  /**
+   * The props used for each slot inside the Popper.
+   * @default {}
+   */
+  componentsProps?: BasePopperProps['slotProps'];
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
 };
 
-const PopperRoot = styled(PopperUnstyled, {
+const PopperRoot = styled(BasePopper, {
   name: 'MuiPopper',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -23,7 +42,7 @@ const PopperRoot = styled(PopperUnstyled, {
  * Demos:
  *
  * - [Autocomplete](https://mui.com/material-ui/react-autocomplete/)
- * - [Menus](https://mui.com/material-ui/react-menu/)
+ * - [Menu](https://mui.com/material-ui/react-menu/)
  * - [Popper](https://mui.com/material-ui/react-popper/)
  *
  * API:
@@ -35,9 +54,55 @@ const Popper = React.forwardRef(function Popper(
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const theme = useTheme<{ direction?: Direction }>();
-  const props = useThemeProps({ props: inProps, name: 'MuiPopper' });
-  return <PopperRoot direction={theme?.direction} {...props} ref={ref} />;
-});
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPopper',
+  });
+
+  const {
+    anchorEl,
+    component,
+    components,
+    componentsProps,
+    container,
+    disablePortal,
+    keepMounted,
+    modifiers,
+    open,
+    placement,
+    popperOptions,
+    popperRef,
+    transition,
+    slots,
+    slotProps,
+    ...other
+  } = props;
+
+  const RootComponent = slots?.root ?? components?.Root;
+  const otherProps = {
+    anchorEl,
+    container,
+    disablePortal,
+    keepMounted,
+    modifiers,
+    open,
+    placement,
+    popperOptions,
+    popperRef,
+    transition,
+    ...other,
+  };
+  return (
+    <PopperRoot
+      as={component}
+      direction={theme?.direction}
+      slots={{ root: RootComponent }}
+      slotProps={slotProps ?? componentsProps}
+      {...otherProps}
+      ref={ref}
+    />
+  );
+}) as React.ForwardRefExoticComponent<PopperProps & React.RefAttributes<HTMLDivElement>>;
 
 Popper.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
@@ -62,6 +127,26 @@ Popper.propTypes /* remove-proptypes */ = {
     PropTypes.node,
     PropTypes.func,
   ]),
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component: PropTypes.elementType,
+  /**
+   * The components used for each slot inside the Popper.
+   * Either a string to use a HTML element or a component.
+   * @default {}
+   */
+  components: PropTypes.shape({
+    Root: PropTypes.elementType,
+  }),
+  /**
+   * The props used for each slot inside the Popper.
+   * @default {}
+   */
+  componentsProps: PropTypes.shape({
+    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  }),
   /**
    * An HTML element or function that returns one.
    * The `container` will have the portal children appended to it.
@@ -172,6 +257,21 @@ Popper.propTypes /* remove-proptypes */ = {
    * A ref that points to the used popper instance.
    */
   popperRef: refType,
+  /**
+   * The props used for each slot inside the Popper.
+   * @default {}
+   */
+  slotProps: PropTypes.shape({
+    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  }),
+  /**
+   * The components used for each slot inside the Popper.
+   * Either a string to use a HTML element or a component.
+   * @default {}
+   */
+  slots: PropTypes.shape({
+    root: PropTypes.elementType,
+  }),
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

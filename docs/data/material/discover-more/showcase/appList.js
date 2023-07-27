@@ -27,7 +27,7 @@ const appList = [
     description:
       'QuintoAndar is a company that uses technology and ' +
       'design to simplify the rental of residential real estate.',
-    image: 'quintoandar.png',
+    image: 'quintoandar.jpg',
     link: 'https://www.quintoandar.com.br/',
     similarWebVisits: 8500,
     dateAdded: '2019-05-08',
@@ -47,7 +47,7 @@ const appList = [
     description:
       'OpenClassrooms is an online platform offering top quality, ' +
       'education-to-employment programs and career coaching services for students worldwide. ',
-    image: 'openclassrooms.jpg',
+    image: 'openclassrooms.png',
     link: 'https://openclassrooms.com/en/',
     similarWebVisits: 6000,
     dateAdded: '2018-01-34',
@@ -82,16 +82,6 @@ const appList = [
     dateAdded: '2018-01-31',
   },
   {
-    title: 'AospExtended Download center',
-    description:
-      'A download center that hosts all the official builds of AospExtended ROM, ' +
-      'for supported devices for different android versions.',
-    image: 'aexdownloadcenter.jpg',
-    link: 'https://downloads.aospextended.com/',
-    similarWebVisits: 200,
-    dateAdded: '2018-01-28',
-  },
-  {
     title: 'Hijup',
     description: 'A pioneering Muslim Fashion e-commerce site.',
     image: 'hijup.jpg',
@@ -114,7 +104,7 @@ const appList = [
     description:
       'Modern Furniture & Accessories, designed in Canada, for everyday living.',
     image: 'eq3.jpg',
-    link: 'https://www.eq3.com/ca/en/',
+    link: 'https://www.eq3.com/ca/en',
     similarWebVisits: 256,
     dateAdded: '2018-01-34',
   },
@@ -214,7 +204,7 @@ const appList = [
       'Comet lets you track code, experiments, and results on ML projects. ' +
       "It's fast, simple, and free for open source projects.",
     image: 'comet.jpg',
-    link: 'https://www.comet.ml/',
+    link: 'https://www.comet.com/',
     similarWebVisits: 180,
     dateAdded: '2019-01-01',
   },
@@ -330,16 +320,6 @@ const appList = [
     dateAdded: '2018-01-23',
   },
   {
-    title: 'DropDesk',
-    description:
-      'DropDesk creates unique workspaces & experiences by converting unused space into vibrant ' +
-      'coworking spaces. Meet, work and gain a sense of community.',
-    image: 'dropdesk.jpg',
-    link: 'https://drop-desk.com/',
-    similarWebVisits: 50,
-    dateAdded: '2019-01-01',
-  },
-  {
     title: 'npm registry browser',
     description:
       'An open source web app that lets you search the npm registry ' +
@@ -387,7 +367,7 @@ const appList = [
     title: 'HiFiveWork',
     description: 'HiFiveWork, the cool tool for leave management',
     image: 'hifivework.png',
-    link: 'https://www.hifivework.com/#/',
+    link: 'https://hifivework.com/',
     dateAdded: '2020-01-08',
   },
   {
@@ -446,6 +426,16 @@ const appList = [
     image: 'mqtt-explorer.png',
     stars: 1600,
     dateAdded: '2019-03-25',
+  },
+  {
+    title: 'refine FineFoods demo',
+    description: 'A full-featured Admin panel app',
+    image: 'refine-finefoods.png',
+    link: 'https://example.mui.admin.refine.dev/',
+    source:
+      'https://github.com/refinedev/refine/tree/next/examples/finefoods-material-ui',
+    stars: 10646,
+    dateAdded: '2022-06-21',
   },
 ];
 

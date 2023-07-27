@@ -1,19 +1,19 @@
-/* eslint-disable material-ui/mui-name-matches-component-name */
+'use client';
 import { createContainer } from '@mui/system';
 import PropTypes from 'prop-types';
 import { OverridableComponent } from '@mui/types';
-import { ContainerTypeMap } from './ContainerProps';
 import { Theme } from '../styles/types/theme';
 import styled from '../styles/styled';
 import { useThemeProps } from '../styles';
+import { ContainerTypeMap } from './ContainerProps';
 
 const Container = createContainer<Theme>({
   createStyledComponent: styled('div', {
-    name: 'MuiContainer',
+    name: 'JoyContainer',
     slot: 'Root',
     overridesResolver: (props, styles) => styles.root,
   }),
-  useThemeProps: (inProps) => useThemeProps({ props: inProps, name: 'MuiContainer' }),
+  useThemeProps: (inProps) => useThemeProps({ props: inProps, name: 'JoyContainer' }),
 }) as OverridableComponent<ContainerTypeMap>;
 
 Container.propTypes /* remove-proptypes */ = {

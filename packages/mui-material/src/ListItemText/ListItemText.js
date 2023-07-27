@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -84,7 +85,7 @@ const ListItemText = React.forwardRef(function ListItemText(inProps, ref) {
       <Typography
         variant={dense ? 'body2' : 'body1'}
         className={classes.primary}
-        component="span"
+        component={primaryTypographyProps?.variant ? undefined : 'span'}
         display="block"
         {...primaryTypographyProps}
       >

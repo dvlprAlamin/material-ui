@@ -1,11 +1,54 @@
 import * as React from 'react';
-import SelectUnstyled, {
-  SelectUnstyledProps,
-  selectUnstyledClasses,
-} from '@mui/base/SelectUnstyled';
-import OptionUnstyled, { optionUnstyledClasses } from '@mui/base/OptionUnstyled';
-import PopperUnstyled from '@mui/base/PopperUnstyled';
+import Select, { SelectProps, selectClasses } from '@mui/base/Select';
+import Option, { optionClasses } from '@mui/base/Option';
+import Popper from '@mui/base/Popper';
 import { styled } from '@mui/system';
+
+export default function UnstyledSelectObjectValues() {
+  const [character, setCharacter] = React.useState<Character | null>(characters[0]);
+  return (
+    <div>
+      <CustomSelect
+        value={character}
+        onChange={(event, newValue) => setCharacter(newValue)}
+      >
+        {characters.map((c) => (
+          <StyledOption key={c.name} value={c}>
+            {c.name}
+          </StyledOption>
+        ))}
+      </CustomSelect>
+      <Paragraph>Selected character:</Paragraph>
+      <Pre>{JSON.stringify(character, null, 2)}</Pre>
+    </div>
+  );
+}
+
+function CustomSelect<TValue extends {}, Multiple extends boolean = false>(
+  props: SelectProps<TValue, Multiple>,
+) {
+  const slots: SelectProps<TValue, Multiple>['slots'] = {
+    root: StyledButton,
+    listbox: StyledListbox,
+    popper: StyledPopper,
+    ...props.slots,
+  };
+
+  return <Select {...props} slots={slots} />;
+}
+
+interface Character {
+  name: string;
+  race: string;
+}
+
+const characters: Character[] = [
+  { name: 'Frodo', race: 'Hobbit' },
+  { name: 'Sam', race: 'Hobbit' },
+  { name: 'Merry', race: 'Hobbit' },
+  { name: 'Gandalf', race: 'Maia' },
+  { name: 'Gimli', race: 'Dwarf' },
+];
 
 const blue = {
   100: '#DAECFF',
@@ -17,16 +60,16 @@ const blue = {
 };
 
 const grey = {
-  50: '#F3F6F9',
-  100: '#E7EBF0',
-  200: '#E0E3E7',
-  300: '#CDD2D7',
-  400: '#B2BAC2',
-  500: '#A0AAB4',
-  600: '#6F7E8C',
-  700: '#3E5060',
-  800: '#2D3843',
-  900: '#1A2027',
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f',
 };
 
 const StyledButton = styled('button')(
@@ -34,27 +77,33 @@ const StyledButton = styled('button')(
   font-family: IBM Plex Sans, sans-serif;
   font-size: 0.875rem;
   box-sizing: border-box;
-  min-height: calc(1.5em + 22px);
   min-width: 320px;
-  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-  border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
-  border-radius: 0.75em;
-  margin: 0.5em;
-  padding: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
   text-align: left;
   line-height: 1.5;
+  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
   color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  box-shadow: 0px 2px 6px ${
+    theme.palette.mode === 'dark' ? 'rgba(0,0,0, 0.50)' : 'rgba(0,0,0, 0.05)'
+  };
+
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 120ms;
 
   &:hover {
-    background: ${theme.palette.mode === 'dark' ? '' : grey[100]};
-    border-color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+    background: ${theme.palette.mode === 'dark' ? grey[800] : grey[50]};
+    border-color: ${theme.palette.mode === 'dark' ? grey[600] : grey[300]};
   }
 
-  &.${selectUnstyledClasses.focusVisible} {
-    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[600] : blue[100]};
+  &.${selectClasses.focusVisible} {
+    border-color: ${blue[400]};
+    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[500] : blue[200]};
   }
 
-  &.${selectUnstyledClasses.expanded} {
+  &.${selectClasses.expanded} {
     &::after {
       content: '▴';
     }
@@ -72,56 +121,59 @@ const StyledListbox = styled('ul')(
   font-family: IBM Plex Sans, sans-serif;
   font-size: 0.875rem;
   box-sizing: border-box;
-  padding: 5px;
-  margin: 10px 0;
+  padding: 6px;
+  margin: 12px 0;
   min-width: 320px;
-  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-  border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
-  border-radius: 0.75em;
-  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  border-radius: 12px;
   overflow: auto;
   outline: 0px;
+  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  box-shadow: 0px 2px 6px ${
+    theme.palette.mode === 'dark' ? 'rgba(0,0,0, 0.50)' : 'rgba(0,0,0, 0.05)'
+  };
   `,
 );
 
-const StyledOption = styled(OptionUnstyled)(
+const StyledOption = styled(Option)(
   ({ theme }) => `
   list-style: none;
   padding: 8px;
-  border-radius: 0.45em;
+  border-radius: 8px;
   cursor: default;
 
   &:last-of-type {
     border-bottom: none;
   }
 
-  &.${optionUnstyledClasses.selected} {
+  &.${optionClasses.selected} {
     background-color: ${theme.palette.mode === 'dark' ? blue[900] : blue[100]};
     color: ${theme.palette.mode === 'dark' ? blue[100] : blue[900]};
   }
 
-  &.${optionUnstyledClasses.highlighted} {
+  &.${optionClasses.highlighted} {
     background-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[100]};
     color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
   }
 
-  &.${optionUnstyledClasses.highlighted}.${optionUnstyledClasses.selected} {
+  &.${optionClasses.highlighted}.${optionClasses.selected} {
     background-color: ${theme.palette.mode === 'dark' ? blue[900] : blue[100]};
     color: ${theme.palette.mode === 'dark' ? blue[100] : blue[900]};
   }
 
-  &.${optionUnstyledClasses.disabled} {
+  &.${optionClasses.disabled} {
     color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
   }
 
-  &:hover:not(.${optionUnstyledClasses.disabled}) {
+  &:hover:not(.${optionClasses.disabled}) {
     background-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[100]};
     color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
   }
   `,
 );
 
-const StyledPopper = styled(PopperUnstyled)`
+const StyledPopper = styled(Popper)`
   z-index: 1;
 `;
 
@@ -147,45 +199,3 @@ const Pre = styled('pre')(
   color: ${theme.palette.mode === 'dark' ? grey[400] : grey[700]};
   `,
 );
-
-function CustomSelect<TValue extends {}>(props: SelectUnstyledProps<TValue>) {
-  const components: SelectUnstyledProps<TValue>['components'] = {
-    Root: StyledButton,
-    Listbox: StyledListbox,
-    Popper: StyledPopper,
-    ...props.components,
-  };
-
-  return <SelectUnstyled {...props} components={components} />;
-}
-
-interface Character {
-  name: string;
-  race: string;
-}
-
-const characters: Character[] = [
-  { name: 'Frodo', race: 'Hobbit' },
-  { name: 'Sam', race: 'Hobbit' },
-  { name: 'Merry', race: 'Hobbit' },
-  { name: 'Gandalf', race: 'Maia' },
-  { name: 'Gimli', race: 'Dwarf' },
-];
-
-export default function UnstyledSelectObjectValues() {
-  const [character, setCharacter] = React.useState<Character | null>(characters[0]);
-  return (
-    <div>
-      <CustomSelect value={character} onChange={setCharacter}>
-        {characters.map((c) => (
-          <StyledOption key={c.name} value={c}>
-            {c.name}
-          </StyledOption>
-        ))}
-      </CustomSelect>
-
-      <Paragraph>Selected character:</Paragraph>
-      <Pre>{JSON.stringify(character, null, 2)}</Pre>
-    </div>
-  );
-}

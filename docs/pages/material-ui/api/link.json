@@ -1,14 +1,15 @@
 {
   "props": {
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "color": { "type": { "name": "any" }, "default": "'primary'" },
     "component": { "type": { "name": "custom", "description": "element type" } },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "TypographyClasses": { "type": { "name": "object" } },
     "underline": {
@@ -40,6 +41,8 @@
     "name": "MuiLink"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiLink",
   "forwardsRefTo": "HTMLAnchorElement",
   "filename": "/packages/mui-material/src/Link/Link.js",
   "inheritance": { "component": "Typography", "pathname": "/material-ui/api/typography/" },

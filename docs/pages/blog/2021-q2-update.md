@@ -37,7 +37,7 @@ Here are the most significant improvements since March 2021.
 
 - 👩‍🎤 We have rolled out the new **style engine** to all the components.
   The community provided invaluable assistance in completing this effort.
-  In v5, we have standardized on the `styled()` API as the styling foundation we build on top of, and introduced the [the `sx` prop](https://mui.com/system/the-sx-prop/) for one-off customizations.
+  In v5, we have standardized on the `styled()` API as the styling foundation we build on top of, and introduced the [the `sx` prop](https://mui.com/system/getting-started/the-sx-prop/) for one-off customizations.
   The `styled()` API is loved by the community, and implemented by a number of styling libraries: styled-components, emotion, stitches, goober, etc. It allows us to support them all with [adapters](https://mui.com/material-ui/guides/styled-engine/#how-to-switch-to-styled-components).
 
 - ⚒️ We added a [codemod CLI](https://github.com/mui/material-ui/tree/HEAD/packages/mui-codemod) and 17 transformations (so far) to automatically migrate codebases from v4 to v5.
@@ -116,7 +116,7 @@ The date picker is at the border between the core component and advanced compone
 - 🐛 We have focused on fixing bugs and regressions to ensure early users have a great experience with the component.
   This was done instead of taking on ambitious new features.
   We want our users to be able to adopt new features as fast as we build them.
-- 🔘 We have added support for a built-in [single select](/x/react-data-grid/columns/#column-types) column type:
+- 🔘 We have added support for a built-in [single select](/x/react-data-grid/column-definition/#column-types) column type:
 
   <img loading="lazy" src="/static/blog/2021-q2-update/single-select.png" alt="" style="width: 481px; margin-bottom: 16px;" />
 
@@ -214,13 +214,13 @@ We have the following objectives:
   It has a lot of accumulated value not being realized. We're aiming for 25% of the community to have migrated by the end of the quarter.
 - ♨️ Fix the friction the community has during the upgrade to v5.
   We want to make the upgrade feel painless.
-- ⚛️ Support [React 18](https://reactjs.org/blog/2021/06/08/the-plan-for-react-18.html). [Sebastian](https://github.com/eps1lon) is part of the React [Working Group](https://github.com/reactwg/react-18/discussions), focusing on making us ready ahead of time.
+- ⚛️ Support [React 18](https://legacy.reactjs.org/blog/2021/06/08/the-plan-for-react-18.html). [Sebastian](https://github.com/eps1lon) is part of the React [Working Group](https://github.com/reactwg/react-18/discussions), focusing on making us ready ahead of time.
   We want our most demanding users to feel empowered by MUI, not slowed down by a third-party.
-- 🦴 Migrate more components to `@mui/base`. [Michał](https://github.com/michaldudak) has recently added support for the [Switch](https://mui.com/base/react-switch/).
+- 🦴 Migrate more components to `@mui/base`. [Michał](https://github.com/michaldudak) has recently added support for the [Switch](https://mui.com/base-ui/react-switch/).
   You can follow our progress in the [umbrella issue](https://github.com/mui/material-ui/issues/27170).
 - 🌈 Do a proof of concept on supporting a second design system.
   Some of our users (and potential users) dislike Material Design. We will try to make the second design system one that they love!
-- 🗓 Execute on all of the items in the [public roadmap](https://github.com/mui/material-ui/projects/25).
+- 🗓 Execute on all of the items in the [public roadmap](https://github.com/orgs/mui/projects/18/views/1).
 - ❓ Please upvote [GitHub issues](https://github.com/mui/material-ui/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc) if you want us to focus on a specific problem. The number of 👍 helps us to prioritize.
 
 ### Advanced components

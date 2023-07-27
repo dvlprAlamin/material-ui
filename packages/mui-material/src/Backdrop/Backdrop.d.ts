@@ -8,23 +8,34 @@ import { OverridableComponent, OverrideProps } from '../OverridableComponent';
 
 export interface BackdropComponentsPropsOverrides {}
 
-export interface BackdropTypeMap<P = {}, D extends React.ElementType = 'div'> {
-  props: P &
+export interface BackdropTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'div',
+> {
+  props: AdditionalProps &
     Partial<Omit<FadeProps, 'children'>> & {
       /**
        * The content of the component.
        */
       children?: React.ReactNode;
       /**
-       * The components used for each slot inside the Backdrop.
-       * Either a string to use a HTML element or a component.
+       * The components used for each slot inside.
+       *
+       * This prop is an alias for the `slots` prop.
+       * It's recommended to use the `slots` prop instead.
+       *
        * @default {}
        */
       components?: {
         Root?: React.ElementType;
       };
       /**
-       * The props used for each slot inside the Backdrop.
+       * The extra props for the slot components.
+       * You can override the existing props or add new ones.
+       *
+       * This prop is an alias for the `slotProps` prop.
+       * It's recommended to use the `slotProps` prop instead, as `componentsProps` will be deprecated in the future.
+       *
        * @default {}
        */
       componentsProps?: {
@@ -45,6 +56,28 @@ export interface BackdropTypeMap<P = {}, D extends React.ElementType = 'div'> {
        */
       open: boolean;
       /**
+       * The extra props for the slot components.
+       * You can override the existing props or add new ones.
+       *
+       * This prop is an alias for the `componentsProps` prop, which will be deprecated in the future.
+       *
+       * @default {}
+       */
+      slotProps?: {
+        root?: React.HTMLAttributes<HTMLDivElement> & BackdropComponentsPropsOverrides;
+      };
+      /**
+       * The components used for each slot inside.
+       *
+       * This prop is an alias for the `components` prop, which will be deprecated in the future.
+       *
+       * @default {}
+       */
+      slots?: {
+        root?: React.ElementType;
+      };
+
+      /**
        * The system prop that allows defining system overrides as well as additional CSS styles.
        */
       sx?: SxProps<Theme>;
@@ -53,13 +86,21 @@ export interface BackdropTypeMap<P = {}, D extends React.ElementType = 'div'> {
        * You may specify a single timeout for all transitions, or individually with an object.
        */
       transitionDuration?: TransitionProps['timeout'];
+      /**
+       * The component used for the transition.
+       * [Follow this guide](/material-ui/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
+       * @default Fade
+       */
+      TransitionComponent?: React.JSXElementConstructor<
+        TransitionProps & { children: React.ReactElement<any, any> }
+      >;
     };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 
 type BackdropRootProps = NonNullable<BackdropTypeMap['props']['componentsProps']>['root'];
 
-export const BackdropRoot: React.FC<BackdropRootProps>;
+export declare const BackdropRoot: React.FC<BackdropRootProps>;
 
 /**
  *
@@ -75,8 +116,8 @@ export const BackdropRoot: React.FC<BackdropRootProps>;
 declare const Backdrop: OverridableComponent<BackdropTypeMap>;
 
 export type BackdropProps<
-  D extends React.ElementType = BackdropTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<BackdropTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = BackdropTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<BackdropTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default Backdrop;

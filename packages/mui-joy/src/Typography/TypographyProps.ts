@@ -1,21 +1,60 @@
 import * as React from 'react';
-import { OverrideProps } from '@mui/types';
-import { TypographyClasses } from './typographyClasses';
-import { TypographySystem, SxProps, SystemProps } from '../styles/types';
+import { OverridableStringUnion, OverrideProps } from '@mui/types';
+import {
+  ColorPaletteProp,
+  SxProps,
+  SystemProps,
+  TypographySystem,
+  VariantProp,
+  ApplyColorInversion,
+  TextColor,
+} from '../styles/types';
+import { CreateSlotsAndSlotProps, SlotProps } from '../utils/types';
 
 export type TypographySlot = 'root' | 'startDecorator' | 'endDecorator';
 
+export interface TypographySlots {
+  /**
+   * The component that renders the root.
+   * @default 'a'
+   */
+  root?: React.ElementType;
+  /**
+   * The component that renders the start decorator.
+   * @default 'span'
+   */
+  startDecorator?: React.ElementType;
+  /**
+   * The component that renders the end decorator.
+   * @default 'span'
+   */
+  endDecorator?: React.ElementType;
+}
+
+export interface TypographyPropsColorOverrides {}
+export interface TypographyPropsVariantOverrides {}
+
+export type TypographySlotsAndSlotProps = CreateSlotsAndSlotProps<
+  TypographySlots,
+  {
+    root: SlotProps<'a', {}, TypographyOwnerState>;
+    startDecorator: SlotProps<'span', {}, TypographyOwnerState>;
+    endDecorator: SlotProps<'span', {}, TypographyOwnerState>;
+  }
+>;
+
 export interface TypographyTypeMap<P = {}, D extends React.ElementType = 'span'> {
   props: P &
-    SystemProps & {
+    TypographySlotsAndSlotProps &
+    Omit<SystemProps, 'color'> & {
       /**
        * The content of the component.
        */
       children?: React.ReactNode;
       /**
-       * Override or extend the styles applied to the component.
+       * The color of the component. It supports those theme colors that make sense for this component.
        */
-      classes?: Partial<TypographyClasses>;
+      color?: OverridableStringUnion<ColorPaletteProp, TypographyPropsColorOverrides>;
       /**
        * Element placed after the children.
        */
@@ -62,9 +101,17 @@ export interface TypographyTypeMap<P = {}, D extends React.ElementType = 'span'>
        */
       startDecorator?: React.ReactNode;
       /**
+       * The system color.
+       */
+      textColor?: TextColor;
+      /**
        * The system prop that allows defining system overrides as well as additional CSS styles.
        */
       sx?: SxProps;
+      /**
+       * The [global variant](https://mui.com/joy-ui/main-features/global-variants/) to use.
+       */
+      variant?: OverridableStringUnion<VariantProp, TypographyPropsVariantOverrides>;
     };
   defaultComponent: D;
 }
@@ -75,3 +122,10 @@ export type TypographyProps<
     component?: React.ElementType;
   },
 > = OverrideProps<TypographyTypeMap<P, D>, D>;
+
+export interface TypographyOwnerState extends ApplyColorInversion<TypographyProps> {
+  /**
+   * If `true`, the element is rendered in a Typography.
+   */
+  nesting: boolean;
+}

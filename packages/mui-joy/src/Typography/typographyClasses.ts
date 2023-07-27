@@ -1,34 +1,56 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/base';
+import { generateUtilityClass, generateUtilityClasses } from '../className';
 
 export interface TypographyClasses {
-  /** Styles applied to the root element. */
+  /** Class name applied to the root element. */
   root: string;
-  /** Styles applied to the root element if `level="h1"`. */
+  /** Class name applied to the root element if `level="h1"`. */
   h1: string;
-  /** Styles applied to the root element if `level="h2"`. */
+  /** Class name applied to the root element if `level="h2"`. */
   h2: string;
-  /** Styles applied to the root element if `level="h3"`. */
+  /** Class name applied to the root element if `level="h3"`. */
   h3: string;
-  /** Styles applied to the root element if `level="h4"`. */
+  /** Class name applied to the root element if `level="h4"`. */
   h4: string;
-  /** Styles applied to the root element if `level="h5"`. */
+  /** Class name applied to the root element if `level="h5"`. */
   h5: string;
-  /** Styles applied to the root element if `level="h6"`. */
+  /** Class name applied to the root element if `level="h6"`. */
   h6: string;
-  /** Styles applied to the root element if `level="body1"`. */
+  /** Class name applied to the root element if `level="body1"`. */
   body1: string;
-  /** Styles applied to the root element if `level="body2"`. */
+  /** Class name applied to the root element if `level="body2"`. */
   body2: string;
-  /** Styles applied to the root element if `level="body3"`. */
+  /** Class name applied to the root element if `level="body3"`. */
   body3: string;
-  /** Styles applied to the root element if `nowrap={true}`. */
+  /** Class name applied to the root element if `nowrap={true}`. */
   noWrap: string;
-  /** Styles applied to the root element if `gutterBottom={true}`. */
+  /** Class name applied to the root element if `gutterBottom={true}`. */
   gutterBottom: string;
-  /** Styles applied to the startDecorator element */
+  /** Class name applied to the startDecorator element */
   startDecorator: string;
-  /** Styles applied to the endDecorator element */
+  /** Class name applied to the endDecorator element */
   endDecorator: string;
+  /** Class name applied to the root element if `color="primary"`. */
+  colorPrimary: string;
+  /** Class name applied to the root element if `color="neutral"`. */
+  colorNeutral: string;
+  /** Class name applied to the root element if `color="danger"`. */
+  colorDanger: string;
+  /** Class name applied to the root element if `color="info"`. */
+  colorInfo: string;
+  /** Class name applied to the root element if `color="success"`. */
+  colorSuccess: string;
+  /** Class name applied to the root element if `color="warning"`. */
+  colorWarning: string;
+  /** Class name applied to the root element when color inversion is triggered. */
+  colorContext: string;
+  /** Class name applied to the root element if `variant="plain"`. */
+  variantPlain: string;
+  /** Class name applied to the root element if `variant="outlined"`. */
+  variantOutlined: string;
+  /** Class name applied to the root element if `variant="soft"`. */
+  variantSoft: string;
+  /** Class name applied to the root element if `variant="solid"`. */
+  variantSolid: string;
 }
 
 export type TypographyClassKey = keyof TypographyClasses;
@@ -52,6 +74,17 @@ const typographyClasses: TypographyClasses = generateUtilityClasses('MuiTypograp
   'gutterBottom',
   'startDecorator',
   'endDecorator',
+  'colorPrimary',
+  'colorNeutral',
+  'colorDanger',
+  'colorInfo',
+  'colorSuccess',
+  'colorWarning',
+  'colorContext',
+  'variantPlain',
+  'variantOutlined',
+  'variantSoft',
+  'variantSolid',
 ]);
 
 export default typographyClasses;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IMaskInput } from 'react-imask';
-import NumberFormat from 'react-number-format';
+import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -30,12 +30,12 @@ const TextMaskCustom = React.forwardRef<HTMLElement, CustomProps>(
   },
 );
 
-const NumberFormatCustom = React.forwardRef<NumberFormat, CustomProps>(
-  function NumberFormatCustom(props, ref) {
+const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(
+  function NumericFormatCustom(props, ref) {
     const { onChange, ...other } = props;
 
     return (
-      <NumberFormat
+      <NumericFormat
         {...other}
         getInputRef={ref}
         onValueChange={(values) => {
@@ -47,7 +47,7 @@ const NumberFormatCustom = React.forwardRef<NumberFormat, CustomProps>(
           });
         }}
         thousandSeparator
-        isNumericString
+        valueIsNumericString
         prefix="$"
       />
     );
@@ -97,7 +97,7 @@ export default function FormattedInputs() {
         name="numberformat"
         id="formatted-numberformat-input"
         InputProps={{
-          inputComponent: NumberFormatCustom as any,
+          inputComponent: NumericFormatCustom as any,
         }}
         variant="standard"
       />

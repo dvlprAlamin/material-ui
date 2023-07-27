@@ -1,7 +1,7 @@
 {
   "props": {
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "color": {
       "type": {
         "name": "enum",
@@ -10,14 +10,15 @@
       "default": "'default'"
     },
     "component": { "type": { "name": "elementType" } },
-    "disableGutters": { "type": { "name": "bool" } },
-    "disableSticky": { "type": { "name": "bool" } },
-    "inset": { "type": { "name": "bool" } },
+    "disableGutters": { "type": { "name": "bool" }, "default": "false" },
+    "disableSticky": { "type": { "name": "bool" }, "default": "false" },
+    "inset": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "name": "ListSubheader",
@@ -27,6 +28,8 @@
     "name": "MuiListSubheader"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiListSubheader",
   "forwardsRefTo": "HTMLLIElement",
   "filename": "/packages/mui-material/src/ListSubheader/ListSubheader.js",
   "inheritance": null,

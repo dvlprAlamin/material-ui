@@ -8,8 +8,11 @@ import { FormControlClasses } from './formControlClasses';
 export interface FormControlPropsSizeOverrides {}
 export interface FormControlPropsColorOverrides {}
 
-export interface FormControlTypeMap<P = {}, D extends React.ElementType = 'div'> {
-  props: P & {
+export interface FormControlTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'div',
+> {
+  props: AdditionalProps & {
     /**
      * The content of the component.
      */
@@ -79,7 +82,7 @@ export interface FormControlTypeMap<P = {}, D extends React.ElementType = 'div'>
      */
     variant?: 'standard' | 'outlined' | 'filled';
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 
 /**
@@ -103,15 +106,15 @@ export interface FormControlTypeMap<P = {}, D extends React.ElementType = 'div'>
  * </FormControl>
  * ```
  *
- * ⚠️ Only one `InputBase` can be used within a FormControl because it create visual inconsistencies.
+ * ⚠️ Only one `InputBase` can be used within a FormControl because it creates visual inconsistencies.
  * For instance, only one input can be focused at the same time, the state shouldn't be shared.
  *
  * Demos:
  *
- * - [Checkboxes](https://mui.com/material-ui/react-checkbox/)
- * - [Radio buttons](https://mui.com/material-ui/react-radio-button/)
- * - [Switches](https://mui.com/material-ui/react-switch/)
- * - [Text fields](https://mui.com/material-ui/react-text-field/)
+ * - [Checkbox](https://mui.com/material-ui/react-checkbox/)
+ * - [Radio Group](https://mui.com/material-ui/react-radio-button/)
+ * - [Switch](https://mui.com/material-ui/react-switch/)
+ * - [Text Field](https://mui.com/material-ui/react-text-field/)
  *
  * API:
  *
@@ -120,8 +123,8 @@ export interface FormControlTypeMap<P = {}, D extends React.ElementType = 'div'>
 declare const FormControl: OverridableComponent<FormControlTypeMap>;
 
 export type FormControlProps<
-  D extends React.ElementType = FormControlTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<FormControlTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = FormControlTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<FormControlTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default FormControl;

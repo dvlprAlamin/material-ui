@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
+import { OverridableStringUnion } from '@mui/types';
 import { OverridableComponent, OverrideProps } from '../OverridableComponent';
 import { Theme } from '../styles';
 import { FormHelperTextClasses } from './formHelperTextClasses';
 
-export interface FormHelperTextTypeMap<P = {}, D extends React.ElementType = 'p'> {
-  props: P & {
+export interface FormHelperTextPropsVariantOverrides {}
+
+export interface FormHelperTextTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'p',
+> {
+  props: AdditionalProps & {
     /**
      * The content of the component.
      *
@@ -48,15 +54,18 @@ export interface FormHelperTextTypeMap<P = {}, D extends React.ElementType = 'p'
     /**
      * The variant to use.
      */
-    variant?: 'standard' | 'outlined' | 'filled';
+    variant?: OverridableStringUnion<
+      'standard' | 'outlined' | 'filled',
+      FormHelperTextPropsVariantOverrides
+    >;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 /**
  *
  * Demos:
  *
- * - [Text fields](https://mui.com/material-ui/react-text-field/)
+ * - [Text Field](https://mui.com/material-ui/react-text-field/)
  *
  * API:
  *
@@ -65,8 +74,8 @@ export interface FormHelperTextTypeMap<P = {}, D extends React.ElementType = 'p'
 declare const FormHelperText: OverridableComponent<FormHelperTextTypeMap>;
 
 export type FormHelperTextProps<
-  D extends React.ElementType = FormHelperTextTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<FormHelperTextTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = FormHelperTextTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<FormHelperTextTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default FormHelperText;

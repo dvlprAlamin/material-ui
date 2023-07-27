@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Script from 'next/script';
 import { ServerStyleSheets as JSSServerStyleSheets } from '@mui/styles';
 import { ServerStyleSheet } from 'styled-components';
 import createEmotionServer from '@emotion/server/create-instance';
@@ -7,8 +8,8 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import { getMetaThemeColor } from 'docs/src/modules/brandingTheme';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import FEATURE_TOGGLE from 'docs/src/featureToggle';
-import { getInitColorSchemeScript } from '@mui/joy/styles';
+import { getInitColorSchemeScript as getMuiInitColorSchemeScript } from '@mui/material/styles';
+import { getInitColorSchemeScript as getJoyInitColorSchemeScript } from '@mui/joy/styles';
 
 // You can find a benchmark of the available CSS minifiers under
 // https://github.com/GoalSmashers/css-minification-benchmark
@@ -30,13 +31,17 @@ if (process.env.NODE_ENV === 'production') {
   cleanCSS = new CleanCSS();
 }
 
-const PRODUCTION_DEPLOYEMENT = !process.env.PULL_REQUEST && process.env.NODE_ENV === 'production';
+const PRODUCTION_GA =
+  process.env.DEPLOY_ENV === 'production' || process.env.DEPLOY_ENV === 'staging';
 
-const GOOGLE_ANALYTICS_ID = PRODUCTION_DEPLOYEMENT ? 'UA-106598593-2' : 'UA-106598593-3';
+// TODO remove https://support.google.com/analytics/answer/11986666
+const GOOGLE_ANALYTICS_ID = PRODUCTION_GA ? 'UA-106598593-2' : 'UA-106598593-3';
+
+const GOOGLE_ANALYTICS_ID_V4 = PRODUCTION_GA ? 'G-5NXDQLC2ZK' : 'G-XJ83JQEK7J';
 
 export default class MyDocument extends Document {
   render() {
-    const { canonicalAs, userLanguage } = this.props;
+    const { canonicalAsServer, userLanguage } = this.props;
 
     return (
       <Html lang={userLanguage}>
@@ -63,13 +68,11 @@ export default class MyDocument extends Document {
           {/* SEO */}
           <link
             rel="canonical"
-            href={`https://mui.com${userLanguage === 'en' ? '' : `/${userLanguage}`}${canonicalAs}`}
+            href={`https://mui.com${
+              userLanguage === 'en' ? '' : `/${userLanguage}`
+            }${canonicalAsServer}`}
           />
-          {/* TODO remove post migration */}
-          {!FEATURE_TOGGLE.enable_redirects && canonicalAs.startsWith('/material-ui/') ? (
-            <meta name="robots" content="noindex,nofollow" />
-          ) : null}
-          <link rel="alternate" href={`https://mui.com${canonicalAs}`} hrefLang="x-default" />
+          <link rel="alternate" href={`https://mui.com${canonicalAsServer}`} hrefLang="x-default" />
           {/*
             Preconnect allows the browser to setup early connections before an HTTP request
             is actually sent to the server.
@@ -81,10 +84,11 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap"
             rel="stylesheet"
           />
-          <link // prevent font flash
+          {/* ========== Font preload (prevent font flash) ============= */}
+          <link
             rel="preload"
             // optimized for english characters (40kb -> 6kb)
-            href="/static/fonts/PlusJakartaSans-ExtraBold-subset.woff2"
+            href="/static/fonts/GeneralSans-Semibold-subset.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
@@ -93,14 +97,32 @@ export default class MyDocument extends Document {
             // the above <link> does not work in mobile device, this inline <style> fixes it without blocking resources
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
-              __html: `@font-face{font-family:'PlusJakartaSans-ExtraBold';font-style:normal;font-weight:800;font-display:swap;src:url('/static/fonts/PlusJakartaSans-ExtraBold-subset.woff2') format('woff2');}`,
+              __html: `@font-face{font-family:'General Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/static/fonts/GeneralSans-Semibold-subset.woff2') format('woff2');}`,
             }}
+          />
+          <link
+            rel="preload"
+            // optimized for english characters (40kb -> 6kb)
+            href="/static/fonts/IBMPlexSans-Regular-subset.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
           />
           <style
             // the above <link> does not work in mobile device, this inline <style> fixes it without blocking resources
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
-              __html: `@font-face{font-family:'PlusJakartaSans-Bold';font-style:normal;font-weight:700;font-display:swap;src:url('/static/fonts/PlusJakartaSans-Bold-subset.woff2') format('woff2');}`,
+              __html: `@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/static/fonts/IBMPlexSans-Regular-subset.woff2') format('woff2');}`,
+            }}
+          />
+          {/* =========================================================== */}
+          <style
+            // Loads General Sans: Regular (400), Medium (500), SemiBold (600), Bold (700)
+            // Typeface documentation: https://www.fontshare.com/fonts/general-sans
+            // use https://cssminifier.com/ to minify
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{
+              __html: `@font-face{font-family:'General Sans';src:url(/static/fonts/GeneralSans-Regular.woff2) format('woff2'),url(/static/fonts/GeneralSans-Regular.ttf) format('truetype');font-weight:400;font-style:normal;font-display:swap;}@font-face{font-family:'General Sans';src:url(/static/fonts/GeneralSans-Medium.woff2) format('woff2'),url(/static/fonts/GeneralSans-Medium.ttf) format('truetype');font-weight:500;font-style:normal;font-display:swap;}@font-face{font-family:'General Sans';src:url(/static/fonts/GeneralSans-SemiBold.woff2) format('woff2'),url(/static/fonts/GeneralSans-SemiBold.ttf) format('truetype');font-weight:600;font-style:normal;font-display:swap;}@font-face{font-family:'General Sans';src:url(/static/fonts/GeneralSans-Bold.woff2) format('woff2'),url(/static/fonts/GeneralSans-Bold.ttf) format('truetype');font-weight:700;font-style:normal;font-display:swap;}`,
             }}
           />
           <style
@@ -147,18 +169,35 @@ export default class MyDocument extends Document {
           />
         </Head>
         <body>
-          {getInitColorSchemeScript({ enableSystem: true })}
+          {getMuiInitColorSchemeScript({ defaultMode: 'system' })}
+          {getJoyInitColorSchemeScript({ defaultMode: 'system' })}
           <Main />
           <script
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
               __html: `
-                window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-                window.ga('create','${GOOGLE_ANALYTICS_ID}',{
-                  sampleRate: ${PRODUCTION_DEPLOYEMENT ? 80 : 100},
-                });
-              `,
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+window.ga('create','${GOOGLE_ANALYTICS_ID}',{
+  sampleRate: ${PRODUCTION_GA ? 80 : 100},
+});
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+window.gtag = gtag;
+gtag('js', new Date());
+gtag('config', '${GOOGLE_ANALYTICS_ID_V4}', {
+  send_page_view: false,
+});
+`,
             }}
+          />
+          {/**
+           * A better alternative to <script async>, to delay its execution
+           * https://developer.chrome.com/blog/script-component/
+           */}
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID_V4}`}
           />
           <NextScript />
         </body>
@@ -237,7 +276,7 @@ MyDocument.getInitialProps = async (ctx) => {
 
     return {
       ...initialProps,
-      canonicalAs: pathnameToLanguage(url).canonicalAs,
+      canonicalAsServer: pathnameToLanguage(url).canonicalAsServer,
       userLanguage: ctx.query.userLanguage || 'en',
       // Styles fragment is rendered after the app and page rendering finish.
       styles: [

@@ -13,7 +13,7 @@ export default function SponsorCard({
 }: {
   item: {
     src: string;
-    srcSet: string;
+    srcSet?: string;
     name: string;
     description: string;
     href: string;
@@ -21,6 +21,13 @@ export default function SponsorCard({
   inView?: boolean;
   logoSize?: number | string;
 }) {
+  // Keep it under two rows maximum.
+  if (item.description.length > 50 && logoSize === 40) {
+    throw new Error(
+      `${item.name}'s description is too long (${item.description.length} characters). It must fit into two line, so under 50 characters.`,
+    );
+  }
+
   return (
     <Paper
       component={Link}

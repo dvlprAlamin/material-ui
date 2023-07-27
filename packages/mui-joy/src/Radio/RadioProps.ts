@@ -1,9 +1,43 @@
 import * as React from 'react';
+import { UseSwitchParameters } from '@mui/base/useSwitch';
 import { OverridableStringUnion, OverrideProps } from '@mui/types';
-import { UseSwitchProps } from '@mui/base/SwitchUnstyled';
-import { ColorPaletteProp, VariantProp, SxProps } from '../styles/types';
+import { ColorPaletteProp, SxProps, VariantProp, ApplyColorInversion } from '../styles/types';
+import { CreateSlotsAndSlotProps, SlotProps } from '../utils/types';
 
-export type RadioSlot = 'root' | 'radio' | 'action' | 'input' | 'label';
+export type RadioSlot = 'root' | 'radio' | 'icon' | 'action' | 'input' | 'label';
+
+export interface RadioSlots {
+  /**
+   * The component that renders the root.
+   * @default 'span'
+   */
+  root?: React.ElementType;
+  /**
+   * The component that renders the radio.
+   * @default 'span'
+   */
+  radio?: React.ElementType;
+  /**
+   * The component that renders the icon.
+   * @default 'span'
+   */
+  icon?: React.ElementType;
+  /**
+   * The component that renders the action.
+   * @default 'span'
+   */
+  action?: React.ElementType;
+  /**
+   * The component that renders the input.
+   * @default 'input'
+   */
+  input?: React.ElementType;
+  /**
+   * The component that renders the label.
+   * @default 'label'
+   */
+  label?: React.ElementType;
+}
 
 export interface RadioPropsVariantOverrides {}
 
@@ -11,9 +45,21 @@ export interface RadioPropsColorOverrides {}
 
 export interface RadioPropsSizeOverrides {}
 
+export type RadioSlotsAndSlotProps = CreateSlotsAndSlotProps<
+  RadioSlots,
+  {
+    root: SlotProps<'span', {}, RadioOwnerState>;
+    radio: SlotProps<'span', {}, RadioOwnerState>;
+    icon: SlotProps<'span', {}, RadioOwnerState>;
+    action: SlotProps<'span', {}, RadioOwnerState>;
+    input: SlotProps<'input', {}, RadioOwnerState>;
+    label: SlotProps<'label', {}, RadioOwnerState>;
+  }
+>;
+
 export interface RadioTypeMap<P = {}, D extends React.ElementType = 'span'> {
   props: P &
-    UseSwitchProps & {
+    UseSwitchParameters & {
       /**
        * The icon to display when the component is checked.
        */
@@ -22,22 +68,6 @@ export interface RadioTypeMap<P = {}, D extends React.ElementType = 'span'> {
        * Class name applied to the root element.
        */
       className?: string;
-      /**
-       * The component used for the Root slot.
-       * Either a string to use a HTML element or a component.
-       */
-      component?: React.ElementType;
-      /**
-       * The props used for each slot inside the Input.
-       * @default {}
-       */
-      componentsProps?: {
-        root?: React.ComponentPropsWithRef<'span'>;
-        radio?: React.ComponentPropsWithRef<'span'>;
-        action?: React.ComponentPropsWithRef<'span'>;
-        input?: React.ComponentPropsWithRef<'input'>;
-        label?: React.ComponentPropsWithRef<'label'>;
-      };
       /**
        * The color of the component. It supports those theme colors that make sense for this component.
        * @default 'neutral'
@@ -59,7 +89,7 @@ export interface RadioTypeMap<P = {}, D extends React.ElementType = 'span'> {
       /**
        * If `true`, the root element's position is set to initial which allows the action area to fill the nearest positioned parent.
        * This prop is useful for composing Radio with ListItem component.
-       * @default false;
+       * @default false
        */
       overlay?: boolean;
       /**
@@ -76,15 +106,15 @@ export interface RadioTypeMap<P = {}, D extends React.ElementType = 'span'> {
        */
       uncheckedIcon?: React.ReactNode;
       /**
-       * The variant to use.
+       * The [global variant](https://mui.com/joy-ui/main-features/global-variants/) to use.
        * @default 'outlined'
        */
-      variant?: OverridableStringUnion<Exclude<VariantProp, 'text'>, RadioPropsVariantOverrides>;
+      variant?: OverridableStringUnion<VariantProp, RadioPropsVariantOverrides>;
       /**
        * The value of the component. The DOM API casts this to a string.
        */
       value?: unknown;
-    };
+    } & RadioSlotsAndSlotProps;
   defaultComponent: D;
 }
 
@@ -94,3 +124,25 @@ export type RadioProps<
     component?: React.ElementType;
   },
 > = OverrideProps<RadioTypeMap<P, D>, D>;
+
+export interface RadioOwnerState extends ApplyColorInversion<RadioProps> {
+  /**
+   * If `true`, the element's focus is visible.
+   */
+  focusVisible?: boolean;
+  /**
+   * @internal
+   * The value from the RadioGroup component.
+   */
+  orientation?: 'horizontal' | 'vertical';
+  /**
+   * @internal
+   * The internal prop for controlling CSS margin of the element.
+   */
+  'data-first-child'?: string;
+  /**
+   * @internal
+   * The internal prop for controlling CSS margin of the element.
+   */
+  'data-parent'?: string;
+}

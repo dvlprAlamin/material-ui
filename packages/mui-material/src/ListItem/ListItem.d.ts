@@ -84,26 +84,55 @@ export interface ListItemBaseProps {
   sx?: SxProps<Theme>;
 }
 
-export interface ListItemTypeMap<P, D extends React.ElementType> {
-  props: P &
+export interface ListItemTypeMap<AdditionalProps, DefaultComponent extends React.ElementType> {
+  props: AdditionalProps &
     ListItemBaseProps & {
       /**
-       * The components used for each slot inside the InputBase.
-       * Either a string to use a HTML element or a component.
+       * The components used for each slot inside.
+       *
+       * This prop is an alias for the `slots` prop.
+       * It's recommended to use the `slots` prop instead.
+       *
        * @default {}
        */
       components?: {
         Root?: React.ElementType;
       };
       /**
-       * The props used for each slot inside the Input.
+       * The extra props for the slot components.
+       * You can override the existing props or add new ones.
+       *
+       * This prop is an alias for the `slotProps` prop.
+       * It's recommended to use the `slotProps` prop instead, as `componentsProps` will be deprecated in the future.
+       *
        * @default {}
        */
       componentsProps?: {
         root?: React.HTMLAttributes<HTMLDivElement> & ListItemComponentsPropsOverrides;
       };
+      /**
+       * The extra props for the slot components.
+       * You can override the existing props or add new ones.
+       *
+       * This prop is an alias for the `componentsProps` prop, which will be deprecated in the future.
+       *
+       * @default {}
+       */
+      slotProps?: {
+        root?: React.HTMLAttributes<HTMLDivElement> & ListItemComponentsPropsOverrides;
+      };
+      /**
+       * The components used for each slot inside.
+       *
+       * This prop is an alias for the `components` prop, which will be deprecated in the future.
+       *
+       * @default {}
+       */
+      slots?: {
+        root?: React.ElementType;
+      };
     };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 
 /**
@@ -112,7 +141,7 @@ export interface ListItemTypeMap<P, D extends React.ElementType> {
  * Demos:
  *
  * - [Lists](https://mui.com/material-ui/react-list/)
- * - [Transfer list](https://mui.com/material-ui/react-transfer-list/)
+ * - [Transfer List](https://mui.com/material-ui/react-transfer-list/)
  *
  * API:
  *
@@ -148,9 +177,9 @@ declare const ListItem: ExtendButtonBase<
     >
   >;
 
-export type ListItemProps<D extends React.ElementType = 'li', P = {}> = OverrideProps<
-  ListItemTypeMap<P, D>,
-  D
->;
+export type ListItemProps<
+  RootComponent extends React.ElementType = 'li',
+  AdditionalProps = {},
+> = OverrideProps<ListItemTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default ListItem;

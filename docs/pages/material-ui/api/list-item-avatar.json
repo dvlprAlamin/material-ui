@@ -1,12 +1,13 @@
 {
   "props": {
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "name": "ListItemAvatar",
@@ -16,6 +17,8 @@
     "name": "MuiListItemAvatar"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiListItemAvatar",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/mui-material/src/ListItemAvatar/ListItemAvatar.js",
   "inheritance": null,

@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ArrowButton from 'docs/src/components/action/ArrowButton';
 
-const Feedback = ({
+function Feedback({
   quote,
   profile,
 }: {
@@ -18,7 +18,7 @@ const Feedback = ({
     role: string;
     company?: React.ReactElement;
   };
-}) => {
+}) {
   return (
     <Box sx={{ color: '#fff' }}>
       <Typography variant="body1" fontWeight="500" component="div" sx={{ mb: 2.5 }}>
@@ -50,28 +50,9 @@ const Feedback = ({
       </Box>
     </Box>
   );
-};
+}
 
 const TESTIMONIALS = [
-  {
-    quote:
-      '"MUI offers a wide variety of high quality components that have allowed us to ship features faster. MUI has been used by more than a hundred engineers in our organization. What\'s more, MUI\'s well architected customization system has allowed us to differentiate ourselves in the marketplace."',
-    profile: {
-      avatarSrc: 'https://avatars.githubusercontent.com/u/28296253?s=58',
-      avatarSrcSet: 'https://avatars.githubusercontent.com/u/28296253?s=116 2x',
-      name: 'Joona Rahko',
-      role: 'Staff Software Engineer',
-      company: (
-        <img
-          src="/static/branding/companies/unity-blue.svg"
-          width="56"
-          height="21"
-          alt="Unity logo"
-          loading="lazy"
-        />
-      ),
-    },
-  },
   {
     quote:
       '"MUI looks great and lets us deliver fast, thanks to their solid API design and documentation - it\'s refreshing to use a component library where you get everything you need from their site rather than Stack Overflow. We think the upcoming version, with extra themes and customizability, will make MUI even more of a game changer. We\'re extremely grateful to the team for the time and effort spent maintaining the project."',
@@ -86,6 +67,25 @@ const TESTIMONIALS = [
           width="81"
           height="21"
           alt="Docker logo"
+          loading="lazy"
+        />
+      ),
+    },
+  },
+  {
+    quote:
+      '"MUI offers a wide variety of high quality components that have allowed us to ship features faster. MUI has been used by more than a hundred engineers in our organization. What\'s more, MUI\'s well architected customization system has allowed us to differentiate ourselves in the marketplace."',
+    profile: {
+      avatarSrc: 'https://avatars.githubusercontent.com/u/28296253?s=58',
+      avatarSrcSet: 'https://avatars.githubusercontent.com/u/28296253?s=116 2x',
+      name: 'Joona Rahko',
+      role: 'Staff Software Engineer',
+      company: (
+        <img
+          src="/static/branding/companies/unity-blue.svg"
+          width="56"
+          height="21"
+          alt="Unity logo"
           loading="lazy"
         />
       ),

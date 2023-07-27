@@ -7,8 +7,11 @@ import { TableClasses } from './tableClasses';
 
 export interface TablePropsSizeOverrides {}
 
-export interface TableTypeMap<P = {}, D extends React.ElementType = 'table'> {
-  props: P & {
+export interface TableTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'table',
+> {
+  props: AdditionalProps & {
     /**
      * The content of the table, normally `TableHead` and `TableBody`.
      */
@@ -39,13 +42,13 @@ export interface TableTypeMap<P = {}, D extends React.ElementType = 'table'> {
      */
     sx?: SxProps<Theme>;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 /**
  *
  * Demos:
  *
- * - [Tables](https://mui.com/material-ui/react-table/)
+ * - [Table](https://mui.com/material-ui/react-table/)
  *
  * API:
  *
@@ -54,8 +57,8 @@ export interface TableTypeMap<P = {}, D extends React.ElementType = 'table'> {
 declare const Table: OverridableComponent<TableTypeMap>;
 
 export type TableProps<
-  D extends React.ElementType = TableTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<TableTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = TableTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<TableTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default Table;

@@ -1,10 +1,10 @@
 ---
-product: material-ui
+productId: material-ui
 title: React Dialog component
 components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide
 githubLabel: 'component: dialog'
-materialDesign: https://material.io/components/dialogs
-waiAria: https://www.w3.org/TR/wai-aria-practices/#dialog_modal
+materialDesign: https://m2.material.io/components/dialogs
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
 ---
 
 # Dialog
@@ -27,7 +27,7 @@ Touch mechanics:
 - Choosing an option immediately commits the option and closes the menu
 - Touching outside of the dialog, or pressing Back, cancels the action and closes the dialog
 
-{{"demo": "SimpleDialog.js"}}
+{{"demo": "SimpleDialogDemo.js"}}
 
 ## Alerts
 
@@ -84,7 +84,7 @@ When the `fullWidth` prop is true, the dialog will adapt based on the `maxWidth`
 
 ## Responsive full-screen
 
-You may make a dialog responsively full screen using [`useMediaQuery`](/material-ui/react-use-media-query/#usemediaquery).
+You may make a dialog responsively full screen using [`useMediaQuery`](/material-ui/react-use-media-query/).
 
 ```jsx
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -137,12 +137,14 @@ Follow the [Modal limitations section](/material-ui/react-modal/#limitations).
 
 ## Complementary projects
 
-### Material UI Confirm
+For more advanced use cases you might be able to take advantage of:
 
-![stars](https://img.shields.io/github/stars/jonatanklosko/material-ui-confirm)
+### material-ui-confirm
+
+![stars](https://img.shields.io/github/stars/jonatanklosko/material-ui-confirm?style=social&label=Star)
 ![npm downloads](https://img.shields.io/npm/dm/material-ui-confirm.svg)
 
-This package provides dialogs for confirming user actions without writing boilerplate code.
+The package [`material-ui-confirm`](https://github.com/jonatanklosko/material-ui-confirm/) provides dialogs for confirming user actions without writing boilerplate code.
 
 ## Accessibility
 

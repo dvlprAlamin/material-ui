@@ -1,16 +1,29 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { unstable_capitalize as capitalize, unstable_useForkRef as useForkRef } from '@mui/utils';
-import { useButton } from '@mui/base/ButtonUnstyled';
+import useButton from '@mui/base/useButton';
 import composeClasses from '@mui/base/composeClasses';
-import { styled, useThemeProps } from '../styles';
-import { ExtendButton, ButtonTypeMap, ButtonProps } from './ButtonProps';
-import { getButtonUtilityClass } from './buttonClasses';
+import { Interpolation } from '@mui/system';
+import { unstable_capitalize as capitalize, unstable_useForkRef as useForkRef } from '@mui/utils';
+import { styled, Theme, useThemeProps } from '../styles';
+import { useColorInversion } from '../styles/ColorInversion';
+import useSlot from '../utils/useSlot';
+import CircularProgress from '../CircularProgress';
+import buttonClasses, { getButtonUtilityClass } from './buttonClasses';
+import { ButtonOwnerState, ButtonTypeMap, ExtendButton } from './ButtonProps';
+import ButtonGroupContext from '../ButtonGroup/ButtonGroupContext';
 
-const useUtilityClasses = (ownerState: ButtonProps & { focusVisible: boolean }) => {
-  const { color, disabled, focusVisible, focusVisibleClassName, fullWidth, size, variant } =
-    ownerState;
+const useUtilityClasses = (ownerState: ButtonOwnerState) => {
+  const {
+    color,
+    disabled,
+    focusVisible,
+    focusVisibleClassName,
+    fullWidth,
+    size,
+    variant,
+    loading,
+  } = ownerState;
 
   const slots = {
     root: [
@@ -21,9 +34,11 @@ const useUtilityClasses = (ownerState: ButtonProps & { focusVisible: boolean }) 
       variant && `variant${capitalize(variant)}`,
       color && `color${capitalize(color)}`,
       size && `size${capitalize(size)}`,
+      loading && 'loading',
     ],
-    startIcon: ['startIcon'],
-    endIcon: ['endIcon'],
+    startDecorator: ['startDecorator'],
+    endDecorator: ['endDecorator'],
+    loadingIndicatorCenter: ['loadingIndicatorCenter'],
   };
 
   const composedClasses = composeClasses(slots, getButtonUtilityClass, {});
@@ -35,64 +50,83 @@ const useUtilityClasses = (ownerState: ButtonProps & { focusVisible: boolean }) 
   return composedClasses;
 };
 
-const ButtonStartIcon = styled('span', {
-  name: 'MuiButton',
-  slot: 'StartIcon',
-  overridesResolver: (props, styles) => styles.startIcon,
-})<{ ownerState: ButtonProps }>({
+const ButtonStartDecorator = styled('span', {
+  name: 'JoyButton',
+  slot: 'StartDecorator',
+  overridesResolver: (props, styles) => styles.startDecorator,
+})<{ ownerState: ButtonOwnerState }>({
+  '--Icon-margin': '0 0 0 calc(var(--Button-gap) / -2)',
+  '--CircularProgress-margin': '0 0 0 calc(var(--Button-gap) / -2)',
   display: 'inherit',
-  marginLeft: 'calc(var(--Button-gutter) * var(--Button-iconOffsetStep) * -0.25)',
   marginRight: 'var(--Button-gap)',
 });
 
-const ButtonEndIcon = styled('span', {
-  name: 'MuiButton',
-  slot: 'EndIcon',
-  overridesResolver: (props, styles) => styles.endIcon,
-})<{ ownerState: ButtonProps }>({
+const ButtonEndDecorator = styled('span', {
+  name: 'JoyButton',
+  slot: 'EndDecorator',
+  overridesResolver: (props, styles) => styles.endDecorator,
+})<{ ownerState: ButtonOwnerState }>({
+  '--Icon-margin': '0 calc(var(--Button-gap) / -2) 0 0',
+  '--CircularProgress-margin': '0 calc(var(--Button-gap) / -2) 0 0',
   display: 'inherit',
   marginLeft: 'var(--Button-gap)',
-  marginRight: 'calc(var(--Button-gutter) * var(--Button-iconOffsetStep) * -0.25)',
 });
 
-const ButtonRoot = styled('button', {
-  name: 'MuiButton',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ButtonProps }>(({ theme, ownerState }) => {
+const ButtonLoadingCenter = styled('span', {
+  name: 'JoyButton',
+  slot: 'LoadingCenter',
+  overridesResolver: (props, styles) => styles.loadingIndicatorCenter,
+})<{ ownerState: ButtonOwnerState }>(({ theme, ownerState }) => ({
+  display: 'inherit',
+  position: 'absolute',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  color: theme.variants[ownerState.variant!]?.[ownerState.color!]?.color,
+  ...(ownerState.disabled && {
+    color: theme.variants[`${ownerState.variant!}Disabled`]?.[ownerState.color!]?.color,
+  }),
+}));
+
+export const getButtonStyles = ({
+  theme,
+  ownerState,
+}: {
+  theme: Theme;
+  ownerState: Partial<Omit<ButtonOwnerState, 'slots' | 'slotProps'>>;
+}): Interpolation<any> => {
   return [
     {
+      '--Icon-margin': 'initial', // reset the icon's margin.
       ...(ownerState.size === 'sm' && {
-        '--Button-gutter': '1rem',
         '--Icon-fontSize': '1.25rem',
+        '--CircularProgress-size': '20px', // must be `px` unit, otherwise the CircularProgress is broken in Safari
+        '--Button-gap': '0.375rem',
+        minHeight: 'var(--Button-minHeight, 2rem)',
+        fontSize: theme.vars.fontSize.sm,
+        paddingBlock: '2px',
+        paddingInline: '0.75rem',
       }),
       ...(ownerState.size === 'md' && {
-        '--Button-gutter': '1.5rem', // gutter is the padding-x
         '--Icon-fontSize': '1.5rem', // control the SvgIcon font-size
+        '--CircularProgress-size': '24px', // must be `px` unit, otherwise the CircularProgress is broken in Safari
+        '--Button-gap': '0.5rem',
+        minHeight: 'var(--Button-minHeight, 2.5rem)', // use min-height instead of height to make the button resilient to its content
+        fontSize: theme.vars.fontSize.sm,
+        paddingBlock: '0.25rem', // the padding-block act as a minimum spacing between content and root element
+        paddingInline: '1rem',
       }),
       ...(ownerState.size === 'lg' && {
-        '--Button-gutter': '2rem',
         '--Icon-fontSize': '1.75rem',
+        '--CircularProgress-size': '28px', // must be `px` unit, otherwise the CircularProgress is broken in Safari
+        '--Button-gap': '0.75rem',
+        minHeight: 'var(--Button-minHeight, 3rem)',
+        fontSize: theme.vars.fontSize.md,
+        paddingBlock: '0.375rem',
+        paddingInline: '1.5rem',
       }),
-      '--Button-iconOffsetStep': 2, // negative margin of the start/end icon
-      '--Button-gap': 'clamp(0.25rem, var(--Button-gutter) * 0.5, 0.5rem)', // gap between start/end icon and content [0.25rem, x, 0.5rem]
-    },
-    {
-      padding: '0.25rem var(--Button-gutter)', // the padding-top, bottom act as a minimum spacing between content and root element
-      ...(ownerState.variant === 'outlined' && {
-        padding:
-          'calc(0.25rem - var(--variant-outlinedBorderWidth)) calc(var(--Button-gutter) - var(--variant-outlinedBorderWidth))', // account for the border width
-      }),
-      ...(ownerState.size === 'sm' && {
-        minHeight: '2rem',
-      }),
-      ...(ownerState.size === 'md' && {
-        minHeight: '2.5rem', // use min-height instead of height to make the button resilient to its content
-      }),
-      ...(ownerState.size === 'lg' && {
-        minHeight: '3rem',
-      }),
-      borderRadius: theme.vars.radius.sm,
+      WebkitTapHighlightColor: 'transparent',
+      borderRadius: `var(--Button-radius, ${theme.vars.radius.sm})`, // to be controlled by other components, eg. Input
+      margin: `var(--Button-margin)`, // to be controlled by other components, eg. Input
       border: 'none',
       backgroundColor: 'transparent',
       cursor: 'pointer',
@@ -100,57 +134,98 @@ const ButtonRoot = styled('button', {
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
-      // TODO: discuss the transition approach in a separate PR. This value is copied from mui-material Button.
-      transition:
-        'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+      textDecoration: 'none', // prevent user agent underline when used as anchor
       fontFamily: theme.vars.fontFamily.body,
-      fontSize: theme.vars.fontSize.md,
+      fontWeight: theme.vars.fontWeight.lg,
       lineHeight: 1,
-      ...(ownerState.size === 'sm' && {
-        fontSize: theme.vars.fontSize.sm,
-      }),
-      ...(ownerState.size === 'lg' && theme.typography.h6),
       ...(ownerState.fullWidth && {
         width: '100%',
       }),
       [theme.focus.selector]: theme.focus.default,
     },
     theme.variants[ownerState.variant!]?.[ownerState.color!],
-    theme.variants[`${ownerState.variant!}Hover`]?.[ownerState.color!],
-    theme.variants[`${ownerState.variant!}Active`]?.[ownerState.color!],
-    theme.variants[`${ownerState.variant!}Disabled`]?.[ownerState.color!],
+    {
+      '&:hover': {
+        '@media (hover: hover)': theme.variants[`${ownerState.variant!}Hover`]?.[ownerState.color!],
+      },
+    },
+    { '&:active': theme.variants[`${ownerState.variant!}Active`]?.[ownerState.color!] },
+    {
+      [`&.${buttonClasses.disabled}`]:
+        theme.variants[`${ownerState.variant!}Disabled`]?.[ownerState.color!],
+      ...(ownerState.loadingPosition === 'center' && {
+        [`&.${buttonClasses.loading}`]: {
+          color: 'transparent',
+        },
+      }),
+    },
   ];
-});
+};
 
+const ButtonRoot = styled('button', {
+  name: 'JoyButton',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{ ownerState: ButtonOwnerState }>(getButtonStyles);
+/**
+ *
+ * Demos:
+ *
+ * - [Button](https://mui.com/joy-ui/react-button/)
+ * - [Button Group](https://mui.com/joy-ui/react-button-group/)
+ * - [Toggle Button Group](https://mui.com/joy-ui/react-toggle-button-group/)
+ *
+ * API:
+ *
+ * - [Button API](https://mui.com/joy-ui/api/button/)
+ */
 const Button = React.forwardRef(function Button(inProps, ref) {
   const props = useThemeProps<typeof inProps & { component?: React.ElementType }>({
     props: inProps,
-    name: 'MuiButton',
+    name: 'JoyButton',
   });
 
   const {
     children,
-    className,
     action,
-    component = 'button',
-    color = 'primary',
-    variant = 'solid',
-    size = 'md',
+    color: colorProp = 'primary',
+    variant: variantProp = 'solid',
+    size: sizeProp = 'md',
     fullWidth = false,
-    startIcon: startIconProp,
-    endIcon: endIconProp,
+    startDecorator,
+    endDecorator,
+    loading = false,
+    loadingPosition = 'center',
+    loadingIndicator: loadingIndicatorProp,
+    disabled: disabledProp,
+    component,
+    slots = {},
+    slotProps = {},
     ...other
   } = props;
+  const buttonGroup = React.useContext(ButtonGroupContext);
+
+  const variant = inProps.variant || buttonGroup.variant || variantProp;
+  const size = inProps.size || buttonGroup.size || sizeProp;
+  const { getColor } = useColorInversion(variant);
+  const color = getColor(inProps.color, buttonGroup.color || colorProp);
+  const disabled = inProps.disabled ?? (buttonGroup.disabled || disabledProp || loading);
 
   const buttonRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useForkRef(buttonRef, ref);
 
-  const ComponentProp = component;
-
   const { focusVisible, setFocusVisible, getRootProps } = useButton({
     ...props,
-    ref: handleRef,
+    disabled,
+    rootRef: handleRef,
   });
+
+  const loadingIndicator = loadingIndicatorProp ?? (
+    <CircularProgress
+      {...(color !== 'context' && { color })}
+      thickness={{ sm: 2, md: 3, lg: 4 }[size] || 3}
+    />
+  );
 
   React.useImperativeHandle(
     action,
@@ -165,40 +240,73 @@ const Button = React.forwardRef(function Button(inProps, ref) {
 
   const ownerState = {
     ...props,
-    component,
     color,
     fullWidth,
     variant,
     size,
     focusVisible,
+    loading,
+    loadingPosition,
+    disabled,
   };
 
   const classes = useUtilityClasses(ownerState);
+  const externalForwardedProps = { ...other, component, slots, slotProps };
 
-  const startIcon = startIconProp && (
-    <ButtonStartIcon className={classes.startIcon} ownerState={ownerState}>
-      {startIconProp}
-    </ButtonStartIcon>
-  );
+  const [SlotRoot, rootProps] = useSlot('root', {
+    ref,
+    className: classes.root,
+    elementType: ButtonRoot,
+    externalForwardedProps,
+    getSlotProps: getRootProps,
+    ownerState,
+  });
 
-  const endIcon = endIconProp && (
-    <ButtonEndIcon className={classes.endIcon} ownerState={ownerState}>
-      {endIconProp}
-    </ButtonEndIcon>
+  const [SlotStartDecorator, startDecoratorProps] = useSlot('startDecorator', {
+    className: classes.startDecorator,
+    elementType: ButtonStartDecorator,
+    externalForwardedProps,
+    ownerState,
+  });
+
+  const [SlotEndDecorator, endDecoratorProps] = useSlot('endDecorator', {
+    className: classes.endDecorator,
+    elementType: ButtonEndDecorator,
+    externalForwardedProps,
+    ownerState,
+  });
+
+  const [SlotLoadingIndicatorCenter, loadingIndicatorCenterProps] = useSlot(
+    'loadingIndicatorCenter',
+    {
+      className: classes.loadingIndicatorCenter,
+      elementType: ButtonLoadingCenter,
+      externalForwardedProps,
+      ownerState,
+    },
   );
 
   return (
-    <ButtonRoot
-      as={ComponentProp}
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-      {...other}
-      {...getRootProps()}
-    >
-      {startIcon}
+    <SlotRoot {...rootProps}>
+      {(startDecorator || (loading && loadingPosition === 'start')) && (
+        <SlotStartDecorator {...startDecoratorProps}>
+          {loading && loadingPosition === 'start' ? loadingIndicator : startDecorator}
+        </SlotStartDecorator>
+      )}
+
       {children}
-      {endIcon}
-    </ButtonRoot>
+      {loading && loadingPosition === 'center' && (
+        <SlotLoadingIndicatorCenter {...loadingIndicatorCenterProps}>
+          {loadingIndicator}
+        </SlotLoadingIndicatorCenter>
+      )}
+
+      {(endDecorator || (loading && loadingPosition === 'end')) && (
+        <SlotEndDecorator {...endDecoratorProps}>
+          {loading && loadingPosition === 'end' ? loadingIndicator : endDecorator}
+        </SlotEndDecorator>
+      )}
+    </SlotRoot>
   );
 }) as ExtendButton<ButtonTypeMap>;
 
@@ -223,15 +331,11 @@ Button.propTypes /* remove-proptypes */ = {
    */
   children: PropTypes.node,
   /**
-   * @ignore
-   */
-  className: PropTypes.string,
-  /**
    * The color of the component. It supports those theme colors that make sense for this component.
    * @default 'primary'
    */
   color: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.oneOf(['context', 'danger', 'info', 'neutral', 'primary', 'success', 'warning']),
+    PropTypes.oneOf(['danger', 'info', 'neutral', 'primary', 'success', 'warning']),
     PropTypes.string,
   ]),
   /**
@@ -247,7 +351,7 @@ Button.propTypes /* remove-proptypes */ = {
   /**
    * Element placed after the children.
    */
-  endIcon: PropTypes.node,
+  endDecorator: PropTypes.node,
   /**
    * @ignore
    */
@@ -258,16 +362,53 @@ Button.propTypes /* remove-proptypes */ = {
    */
   fullWidth: PropTypes.bool,
   /**
+   * If `true`, the loading indicator is shown.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
+   * The node should contain an element with `role="progressbar"` with an accessible name.
+   * By default we render a `CircularProgress` that is labelled by the button itself.
+   * @default <CircularProgress />
+   */
+  loadingIndicator: PropTypes.node,
+  /**
+   * The loading indicator can be positioned on the start, end, or the center of the button.
+   * @default 'center'
+   */
+  loadingPosition: PropTypes.oneOf(['center', 'end', 'start']),
+  /**
    * The size of the component.
+   * @default 'md'
    */
   size: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.oneOf(['sm', 'md', 'lg']),
     PropTypes.string,
   ]),
   /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps: PropTypes.shape({
+    endDecorator: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    loadingIndicatorCenter: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    startDecorator: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  }),
+  /**
+   * The components used for each slot inside.
+   * @default {}
+   */
+  slots: PropTypes.shape({
+    endDecorator: PropTypes.elementType,
+    loadingIndicatorCenter: PropTypes.elementType,
+    root: PropTypes.elementType,
+    startDecorator: PropTypes.elementType,
+  }),
+  /**
    * Element placed before the children.
    */
-  startIcon: PropTypes.node,
+  startDecorator: PropTypes.node,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -281,13 +422,16 @@ Button.propTypes /* remove-proptypes */ = {
    */
   tabIndex: PropTypes.number,
   /**
-   * The variant to use.
+   * The [global variant](https://mui.com/joy-ui/main-features/global-variants/) to use.
    * @default 'solid'
    */
   variant: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.oneOf(['contained', 'light', 'outlined', 'text']),
+    PropTypes.oneOf(['outlined', 'plain', 'soft', 'solid']),
     PropTypes.string,
   ]),
 } as any;
+
+// @ts-ignore internal logic for ToggleButtonGroup
+Button.muiName = 'Button';
 
 export default Button;

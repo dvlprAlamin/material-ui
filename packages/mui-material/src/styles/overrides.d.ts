@@ -44,6 +44,7 @@ import { FormGroupClassKey } from '../FormGroup';
 import { FormHelperTextClassKey } from '../FormHelperText';
 import { FormLabelClassKey } from '../FormLabel';
 import { GridClassKey } from '../Grid';
+import { Grid2Slot } from '../Unstable_Grid2';
 import { IconButtonClassKey } from '../IconButton';
 import { IconClassKey } from '../Icon';
 import { ImageListClassKey } from '../ImageList';
@@ -65,6 +66,7 @@ import { ListItemTextClassKey } from '../ListItemText';
 import { ListSubheaderClassKey } from '../ListSubheader';
 import { MenuClassKey } from '../Menu';
 import { MenuItemClassKey } from '../MenuItem';
+import { MenuListClassKey } from '../MenuList';
 import { MobileStepperClassKey } from '../MobileStepper';
 import { ModalClassKey } from '../Modal';
 import { NativeSelectClassKey } from '../NativeSelect';
@@ -133,7 +135,7 @@ export type ComponentsOverrides<Theme = unknown> = {
     OverridesStyleRules<ComponentNameToClassKey[Name], Name, Theme>
   >;
 } & {
-  MuiCssBaseline?: CSSObject | string;
+  MuiCssBaseline?: CSSObject | string | ((theme: Theme) => CSSInterpolation);
 };
 
 export interface ComponentNameToClassKey {
@@ -181,6 +183,7 @@ export interface ComponentNameToClassKey {
   MuiFormHelperText: FormHelperTextClassKey;
   MuiFormLabel: FormLabelClassKey;
   MuiGrid: GridClassKey;
+  MuiGrid2: Grid2Slot;
   MuiIcon: IconClassKey;
   MuiIconButton: IconButtonClassKey;
   MuiImageList: ImageListClassKey;
@@ -202,6 +205,7 @@ export interface ComponentNameToClassKey {
   MuiListSubheader: ListSubheaderClassKey;
   MuiMenu: MenuClassKey;
   MuiMenuItem: MenuItemClassKey;
+  MuiMenuList: MenuListClassKey;
   MuiMobileStepper: MobileStepperClassKey;
   MuiModal: ModalClassKey;
   MuiNativeSelect: NativeSelectClassKey;

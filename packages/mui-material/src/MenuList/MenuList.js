@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
@@ -87,7 +88,7 @@ function moveFocus(
 }
 
 /**
- * A permanently displayed menu following https://www.w3.org/TR/wai-aria-practices/#menubutton.
+ * A permanently displayed menu following https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/.
  * It's exposed to help customization of the [`Menu`](/material-ui/api/menu/) component if you
  * use it separately you need to move focus into the component manually. Once
  * the focus is placed inside the component it is fully keyboard accessible.
@@ -211,6 +212,13 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
   // item and use the first valid item as a fallback
   React.Children.forEach(children, (child, index) => {
     if (!React.isValidElement(child)) {
+      if (activeItemIndex === index) {
+        activeItemIndex += 1;
+        if (activeItemIndex >= children.length) {
+          // there are no focusable items within the list.
+          activeItemIndex = -1;
+        }
+      }
       return;
     }
 
@@ -230,6 +238,17 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
         activeItemIndex = index;
       } else if (activeItemIndex === -1) {
         activeItemIndex = index;
+      }
+    }
+
+    if (
+      activeItemIndex === index &&
+      (child.props.disabled || child.props.muiSkipListHighlight || child.type.muiSkipListHighlight)
+    ) {
+      activeItemIndex += 1;
+      if (activeItemIndex >= children.length) {
+        // there are no focusable items within the list.
+        activeItemIndex = -1;
       }
     }
   });

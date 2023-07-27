@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -37,7 +38,7 @@ const DialogTitle = React.forwardRef(function DialogTitle(inProps, ref) {
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const { titleId: id = idProp } = React.useContext(DialogContext);
+  const { titleId = idProp } = React.useContext(DialogContext);
 
   return (
     <DialogTitleRoot
@@ -46,7 +47,7 @@ const DialogTitle = React.forwardRef(function DialogTitle(inProps, ref) {
       ownerState={ownerState}
       ref={ref}
       variant="h6"
-      id={id}
+      id={idProp ?? titleId}
       {...other}
     />
   );

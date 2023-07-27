@@ -1,17 +1,7 @@
-const bpmr = require('babel-plugin-module-resolver');
 const fse = require('fs-extra');
 const path = require('path');
 
 const errorCodesPath = path.resolve(__dirname, './public/static/error-codes.json');
-
-function resolvePath(sourcePath, currentFile, opts) {
-  if (sourcePath === 'markdown') {
-    const base = currentFile.substring(__dirname.length).slice(0, -3);
-    return `${__dirname}/docs/src/${base}/`;
-  }
-
-  return bpmr.resolvePath(sourcePath, currentFile, opts);
-}
 
 const alias = {
   '@mui/material': '../packages/mui-material/src',
@@ -25,7 +15,6 @@ const alias = {
   // '@mui/styled-engine': '../packages/mui-styled-engine-sc/src',
   '@mui/system': '../packages/mui-system/src',
   '@mui/private-theming': '../packages/mui-private-theming/src',
-  '@mui/private-classnames': '../packages/mui-private-classnames/src',
   '@mui/utils': '../packages/mui-utils/src',
   '@mui/base': '../packages/mui-base/src',
   '@mui/material-next': '../packages/mui-material-next/src',
@@ -71,7 +60,6 @@ module.exports = {
       {
         alias,
         transformFunctions: ['require', 'require.context'],
-        resolvePath,
       },
     ],
   ],

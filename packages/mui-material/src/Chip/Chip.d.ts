@@ -11,8 +11,11 @@ export interface ChipPropsSizeOverrides {}
 
 export interface ChipPropsColorOverrides {}
 
-export interface ChipTypeMap<P = {}, D extends React.ElementType = 'div'> {
-  props: P & {
+export interface ChipTypeMap<
+  AdditionalProps = {},
+  DefaultComponent extends React.ElementType = 'div',
+> {
+  props: AdditionalProps & {
     /**
      * The Avatar element to display.
      */
@@ -73,16 +76,26 @@ export interface ChipTypeMap<P = {}, D extends React.ElementType = 'div'> {
      */
     size?: OverridableStringUnion<'small' | 'medium', ChipPropsSizeOverrides>;
     /**
+     * If `true`, allows the disabled chip to escape focus.
+     * If `false`, allows the disabled chip to receive focus.
+     * @default false
+     */
+    skipFocusWhenDisabled?: boolean;
+    /**
      * The system prop that allows defining system overrides as well as additional CSS styles.
      */
     sx?: SxProps<Theme>;
+    /**
+     *  @ignore
+     */
+    tabIndex?: number;
     /**
      * The variant to use.
      * @default 'filled'
      */
     variant?: OverridableStringUnion<'filled' | 'outlined', ChipPropsVariantOverrides>;
   };
-  defaultComponent: D;
+  defaultComponent: DefaultComponent;
 }
 
 /**
@@ -90,7 +103,7 @@ export interface ChipTypeMap<P = {}, D extends React.ElementType = 'div'> {
  *
  * Demos:
  *
- * - [Chips](https://mui.com/material-ui/react-chip/)
+ * - [Chip](https://mui.com/material-ui/react-chip/)
  *
  * API:
  *
@@ -99,8 +112,8 @@ export interface ChipTypeMap<P = {}, D extends React.ElementType = 'div'> {
 declare const Chip: OverridableComponent<ChipTypeMap>;
 
 export type ChipProps<
-  D extends React.ElementType = ChipTypeMap['defaultComponent'],
-  P = {},
-> = OverrideProps<ChipTypeMap<P, D>, D>;
+  RootComponent extends React.ElementType = ChipTypeMap['defaultComponent'],
+  AdditionalProps = {},
+> = OverrideProps<ChipTypeMap<AdditionalProps, RootComponent>, RootComponent>;
 
 export default Chip;

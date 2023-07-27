@@ -1,10 +1,13 @@
-# Components
+# Themed components
 
-<p class="description">You can customize a component's styles, default props, and more by using its keys inside the theme. This helps to achieve styling consistency across your application.</p>
+<p class="description">You can customize a component's styles, default props, and more by using its component key inside the theme.</p>
 
-## Default props
+The `components` key in the theme helps to achieve styling consistency across your application.
+However, the theme isn't tree-shakable, prefer creating new components for heavy customizations.
 
-Every Material UI component has default preset values for each of its props.
+## Theme default props
+
+Every Material UI component has default values for each of its props.
 To change these default values, use the `defaultProps` key exposed in the theme's `components` key:
 
 ```js
@@ -23,9 +26,9 @@ const theme = createTheme({
 
 {{"demo": "DefaultProps.js"}}
 
-If you're using Typescript and [lab components](/material-ui/about-the-lab/), check [this article to learn how to override their styles](/material-ui/about-the-lab/#typescript).
+If you're using TypeScript and [lab components](/material-ui/about-the-lab/), check [this article to learn how to override their styles](/material-ui/about-the-lab/#typescript).
 
-## Global style overrides
+## Theme style overrides
 
 The theme's `styleOverrides` key makes it possible to potentially change every single style injected by Material UI into the DOM.
 This is useful if you want to apply a fully custom design system to Material UI's components.
@@ -57,13 +60,15 @@ You can use these classes inside the `styleOverrides` key to modify the correspo
 const theme = createTheme({
   components: {
     MuiButton: {
-      styleOverrides: ({ ownerState }) => ({
-        ...(ownerState.variant === 'contained' &&
-          ownerState.color === 'primary' && {
-            backgroundColor: '#202020',
-            color: '#fff',
-          }),
-      }),
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          ...(ownerState.variant === 'contained' &&
+            ownerState.color === 'primary' && {
+              backgroundColor: '#202020',
+              color: '#fff',
+            }),
+        }),
+      },
     },
   },
 });
@@ -98,13 +103,13 @@ const finalTheme = createTheme({
 
 The `sx` prop acts as a shortcut for defining custom styles that access the theme object.
 This prop lets you write inline styles using a superset of CSS.
-Learn more about [the concept behind the `sx` prop](/system/the-sx-prop/) and [how `sx` differs from the `styled` utility](/system/styled/#difference-with-the-sx-prop).
+Learn more about [the concept behind the `sx` prop](/system/getting-started/the-sx-prop/) and [how `sx` differs from the `styled` utility](/system/styled/#difference-with-the-sx-prop).
 
 You can use the `sx` prop inside the `styleOverrides` key to modify styles within the theme using shorthand CSS notation.
 This is especially handy if you're already using the `sx` prop with your components, because you can use the same syntax in your theme and quickly transfer styles between the two.
 
 :::info
-**Note:** The `sx` prop is a stable feature for customizing components in Material UI v5, but it is still considered _experimental_ when used directly inside the theme object.
+The `sx` prop is a stable feature for customizing components in Material UI v5, but it is still considered _experimental_ when used directly inside the theme object.
 :::
 
 {{"demo": "GlobalThemeOverrideSx.js", "defaultCodeOpen": false}}
@@ -114,18 +119,20 @@ const finalTheme = createTheme({
   components: {
     MuiChip: {
       styleOverrides: {
-        root: sx({
-          px: 1,
-          py: 0.25,
-          borderRadius: 1,
-        }),
+        root: ({ theme }) =>
+          theme.unstable_sx({
+            px: 1,
+            py: 0.25,
+            borderRadius: 1,
+          }),
         label: {
           padding: 'initial',
         },
-        icon: sx({
-          mr: 0.5,
-          ml: '-2px',
-        }),
+        icon: ({ theme }) =>
+          theme.unstable_sx({
+            mr: 0.5,
+            ml: '-2px',
+          }),
       },
     },
   },

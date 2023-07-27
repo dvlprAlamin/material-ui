@@ -1,11 +1,11 @@
 ---
-product: material-ui
+productId: material-ui
 title: React Backdrop（蒙版）组件
 components: Backdrop
 githubLabel: 'component: backdrop'
 ---
 
-# Backdrop
+# 蒙版
 
 <p class="description">蒙版组件用于特定元素或其部分的强调。</p>
 

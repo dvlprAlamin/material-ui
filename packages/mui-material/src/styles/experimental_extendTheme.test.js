@@ -53,6 +53,9 @@ describe('experimental_extendTheme', () => {
 
   it('should generate color channels', () => {
     const theme = extendTheme();
+    expect(theme.colorSchemes.dark.palette.background.defaultChannel).to.equal('18 18 18');
+    expect(theme.colorSchemes.light.palette.background.defaultChannel).to.equal('255 255 255');
+
     expect(theme.colorSchemes.dark.palette.primary.mainChannel).to.equal('144 202 249');
     expect(theme.colorSchemes.dark.palette.primary.darkChannel).to.equal('66 165 245');
     expect(theme.colorSchemes.dark.palette.primary.lightChannel).to.equal('227 242 253');
@@ -83,31 +86,11 @@ describe('experimental_extendTheme', () => {
 
     expect(theme.colorSchemes.light.palette.dividerChannel).to.equal('0 0 0');
 
-    expect(theme.colorSchemes.light.palette.grey.darkChannel).to.equal('97 97 97');
-    expect(theme.colorSchemes.dark.palette.grey.darkChannel).to.equal('97 97 97');
-  });
+    expect(theme.colorSchemes.dark.palette.action.activeChannel).to.equal('255 255 255');
+    expect(theme.colorSchemes.light.palette.action.activeChannel).to.equal('0 0 0');
 
-  it('should change grey darkChannel', () => {
-    const theme = extendTheme({
-      colorSchemes: {
-        light: {
-          palette: {
-            grey: {
-              dark: '#888',
-            },
-          },
-        },
-        dark: {
-          palette: {
-            grey: {
-              dark: '#999',
-            },
-          },
-        },
-      },
-    });
-    expect(theme.colorSchemes.light.palette.grey.darkChannel).to.equal('136 136 136');
-    expect(theme.colorSchemes.dark.palette.grey.darkChannel).to.equal('153 153 153');
+    expect(theme.colorSchemes.dark.palette.action.selectedChannel).to.equal('255 255 255');
+    expect(theme.colorSchemes.light.palette.action.selectedChannel).to.equal('0 0 0');
   });
 
   it('should generate common background, onBackground channels', () => {
@@ -222,12 +205,16 @@ describe('experimental_extendTheme', () => {
     it('should provide the default opacities', () => {
       const theme = extendTheme();
       expect(theme.colorSchemes.light.opacity).to.deep.equal({
-        placeholder: 0.42,
-        inputTouchBottomLine: 0.42,
+        inputPlaceholder: 0.42,
+        inputUnderline: 0.42,
+        switchTrackDisabled: 0.12,
+        switchTrack: 0.38,
       });
       expect(theme.colorSchemes.dark.opacity).to.deep.equal({
-        placeholder: 0.5,
-        inputTouchBottomLine: 0.7,
+        inputPlaceholder: 0.5,
+        inputUnderline: 0.7,
+        switchTrackDisabled: 0.2,
+        switchTrack: 0.3,
       });
     });
 
@@ -236,24 +223,43 @@ describe('experimental_extendTheme', () => {
         colorSchemes: {
           light: {
             opacity: {
-              placeholder: 1,
+              inputPlaceholder: 1,
             },
           },
           dark: {
             opacity: {
-              placeholder: 0.2,
+              inputPlaceholder: 0.2,
             },
           },
         },
       });
-      expect(theme.colorSchemes.light.opacity).to.deep.equal({
-        placeholder: 1,
-        inputTouchBottomLine: 0.42,
+      expect(theme.colorSchemes.light.opacity).to.deep.include({
+        inputPlaceholder: 1,
+        inputUnderline: 0.42,
       });
-      expect(theme.colorSchemes.dark.opacity).to.deep.equal({
-        placeholder: 0.2,
-        inputTouchBottomLine: 0.7,
+      expect(theme.colorSchemes.dark.opacity).to.deep.include({
+        inputPlaceholder: 0.2,
+        inputUnderline: 0.7,
       });
+    });
+  });
+
+  describe('overlays', () => {
+    it('should provide the default array', () => {
+      const theme = extendTheme();
+      expect(theme.colorSchemes.light.overlays).to.have.length(0);
+      expect(theme.colorSchemes.dark.overlays).to.have.length(25);
+
+      expect(theme.colorSchemes.dark.overlays[0]).to.equal(undefined);
+      expect(theme.colorSchemes.dark.overlays[24]).to.equal(
+        'linear-gradient(rgba(255 255 255 / 0.16), rgba(255 255 255 / 0.16))',
+      );
+    });
+
+    it('should override the array as expected', () => {
+      const overlays = Array(24).fill('none');
+      const theme = extendTheme({ colorSchemes: { dark: { overlays } } });
+      expect(theme.colorSchemes.dark.overlays).to.equal(overlays);
     });
   });
 
@@ -390,5 +396,111 @@ describe('experimental_extendTheme', () => {
       </CssVarsProvider>,
     );
     expect(container.firstChild).toHaveComputedStyle({ fontFamily: 'cursive' });
+  });
+
+  describe('css var prefix', () => {
+    it('has mui as default css var prefix', () => {
+      const theme = extendTheme();
+      expect(theme.cssVarPrefix).to.equal('mui');
+    });
+
+    it('custom css var prefix', () => {
+      const theme = extendTheme({ cssVarPrefix: 'foo' });
+      expect(theme.cssVarPrefix).to.equal('foo');
+    });
+  });
+
+  describe('warnings', () => {
+    it('dependent token: should warn if the value cannot be parsed by color manipulators', () => {
+      expect(() =>
+        extendTheme({
+          colorSchemes: {
+            light: {
+              palette: {
+                divider: 'green',
+              },
+            },
+          },
+        }),
+      ).toWarnDev(
+        "MUI: Can't create `palette.dividerChannel` because `palette.divider` is not one of these formats: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla(), color()." +
+          '\n' +
+          'To suppress this warning, you need to explicitly provide the `palette.dividerChannel` as a string (in rgb format, e.g. "12 12 12") or undefined if you want to remove the channel token.',
+      );
+    });
+
+    it('should not warn if channel token is provided', () => {
+      expect(() =>
+        extendTheme({
+          colorSchemes: {
+            light: {
+              palette: {
+                dividerChannel: '12 12 12',
+              },
+            },
+          },
+        }),
+      ).not.toWarnDev();
+      expect(() =>
+        extendTheme({
+          colorSchemes: {
+            light: {
+              palette: {
+                dividerChannel: undefined,
+              },
+            },
+          },
+        }),
+      ).not.toWarnDev();
+    });
+
+    it('independent token: should skip warning', () => {
+      expect(() =>
+        extendTheme({
+          colorSchemes: {
+            light: {
+              palette: {
+                Alert: {
+                  errorColor: 'green',
+                },
+              },
+            },
+          },
+        }),
+      ).not.to.throw();
+    });
+
+    it('custom palette should not throw errors', () => {
+      expect(() =>
+        extendTheme({
+          colorSchemes: {
+            light: {
+              palette: {
+                gradient: {
+                  primary: 'linear-gradient(#000, transparent)',
+                },
+              },
+            },
+          },
+        }),
+      ).not.to.throw();
+    });
+  });
+
+  it('should have the vars object', () => {
+    const theme = extendTheme();
+    const keys = [
+      // MD2 specific tokens
+      'palette',
+      'shadows',
+      'zIndex',
+      'opacity',
+      'overlays',
+      'shape',
+    ];
+
+    Object.keys(keys).forEach((key) => {
+      expect(theme[key]).to.deep.equal(theme.vars[key]);
+    });
   });
 });

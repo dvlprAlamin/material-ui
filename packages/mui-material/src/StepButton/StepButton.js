@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -53,7 +54,7 @@ const StepButton = React.forwardRef(function StepButton(inProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiStepButton' });
   const { children, className, icon, optional, ...other } = props;
 
-  const { disabled } = React.useContext(StepContext);
+  const { disabled, active } = React.useContext(StepContext);
   const { orientation } = React.useContext(StepperContext);
 
   const ownerState = { ...props, orientation };
@@ -79,6 +80,7 @@ const StepButton = React.forwardRef(function StepButton(inProps, ref) {
       className={clsx(classes.root, className)}
       ref={ref}
       ownerState={ownerState}
+      aria-current={active ? 'step' : undefined}
       {...other}
     >
       {child}

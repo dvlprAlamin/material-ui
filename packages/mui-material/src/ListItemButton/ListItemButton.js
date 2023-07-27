@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -136,15 +137,19 @@ const ListItemButton = React.forwardRef(function ListItemButton(inProps, ref) {
     divider = false,
     focusVisibleClassName,
     selected = false,
+    className,
     ...other
   } = props;
 
   const context = React.useContext(ListContext);
-  const childContext = {
-    dense: dense || context.dense || false,
-    alignItems,
-    disableGutters,
-  };
+  const childContext = React.useMemo(
+    () => ({
+      dense: dense || context.dense || false,
+      alignItems,
+      disableGutters,
+    }),
+    [alignItems, context.dense, dense, disableGutters],
+  );
 
   const listItemRef = React.useRef(null);
   useEnhancedEffect(() => {
@@ -176,9 +181,12 @@ const ListItemButton = React.forwardRef(function ListItemButton(inProps, ref) {
     <ListContext.Provider value={childContext}>
       <ListItemButtonRoot
         ref={handleRef}
-        component={component}
+        href={other.href || other.to}
+        // `ButtonBase` processes `href` or `to` if `component` is set to 'button'
+        component={(other.href || other.to) && component === 'div' ? 'button' : component}
         focusVisibleClassName={clsx(classes.focusVisible, focusVisibleClassName)}
         ownerState={ownerState}
+        className={clsx(classes.root, className)}
         {...other}
         classes={classes}
       >
@@ -214,6 +222,10 @@ ListItemButton.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   /**
+   * @ignore
+   */
+  className: PropTypes.string,
+  /**
    * The component used for the root node.
    * Either a string to use a HTML element or a component.
    */
@@ -248,6 +260,10 @@ ListItemButton.propTypes /* remove-proptypes */ = {
    * if needed.
    */
   focusVisibleClassName: PropTypes.string,
+  /**
+   * @ignore
+   */
+  href: PropTypes.string,
   /**
    * Use to apply selected styling.
    * @default false

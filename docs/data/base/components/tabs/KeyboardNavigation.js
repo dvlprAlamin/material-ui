@@ -1,9 +1,37 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { buttonUnstyledClasses } from '@mui/base/ButtonUnstyled';
-import TabsUnstyled from '@mui/base/TabsUnstyled';
-import TabUnstyled, { tabUnstyledClasses } from '@mui/base/TabUnstyled';
-import TabsListUnstyled from '@mui/base/TabsListUnstyled';
+import { buttonClasses } from '@mui/base/Button';
+import Tabs from '@mui/base/Tabs';
+import Tab, { tabClasses } from '@mui/base/Tab';
+import TabsList from '@mui/base/TabsList';
+
+export default function KeyboardNavigation() {
+  return (
+    <div>
+      <p>Selection following focus:</p>
+      <Tabs
+        defaultValue={1}
+        aria-label="Tabs where selection follows focus"
+        selectionFollowsFocus
+      >
+        <StyledTabsList>
+          <StyledTab value={1}>One</StyledTab>
+          <StyledTab value={2}>Two</StyledTab>
+          <StyledTab value={3}>Three</StyledTab>
+        </StyledTabsList>
+      </Tabs>
+
+      <p>Selection independent of focus (default behavior):</p>
+      <Tabs defaultValue={1} aria-label="Tabs where selection does not follow focus">
+        <StyledTabsList>
+          <StyledTab value={1}>One</StyledTab>
+          <StyledTab value={2}>Two</StyledTab>
+          <StyledTab value={3}>Three</StyledTab>
+        </StyledTabsList>
+      </Tabs>
+    </div>
+  );
+}
 
 const blue = {
   50: '#F0F7FF',
@@ -18,18 +46,31 @@ const blue = {
   900: '#003A75',
 };
 
-const Tab = styled(TabUnstyled)`
-  font-family: IBM Plex Sans, sans-serif;
+const grey = {
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f',
+};
+
+const StyledTab = styled(Tab)`
+  font-family: 'IBM Plex Sans', sans-serif;
   color: white;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: bold;
   background-color: transparent;
   width: 100%;
-  padding: 12px 16px;
-  margin: 6px 6px;
+  padding: 12px;
+  margin: 6px;
   border: none;
-  border-radius: 5px;
+  border-radius: 7px;
   display: flex;
   justify-content: center;
 
@@ -39,60 +80,30 @@ const Tab = styled(TabUnstyled)`
 
   &:focus {
     color: #fff;
-    border-radius: 3px;
-    outline: 2px solid ${blue[200]};
-    outline-offset: 2px;
+    outline: 3px solid ${blue[200]};
   }
 
-  &.${tabUnstyledClasses.selected} {
-    background-color: ${blue[50]};
+  &.${tabClasses.selected} {
+    background-color: #fff;
     color: ${blue[600]};
   }
 
-  &.${buttonUnstyledClasses.disabled} {
+  &.${buttonClasses.disabled} {
     opacity: 0.5;
     cursor: not-allowed;
   }
 `;
 
-const TabsList = styled(TabsListUnstyled)`
-  min-width: 320px;
+const StyledTabsList = styled(TabsList)(
+  ({ theme }) => `
+  min-width: 400px;
   background-color: ${blue[500]};
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   align-content: space-between;
-`;
-
-export default function AccessibleTabs1() {
-  return (
-    <div>
-      <p>Selection following focus:</p>
-      <TabsUnstyled
-        defaultValue={0}
-        aria-label="Tabs where selection follows focus"
-        selectionFollowsFocus
-      >
-        <TabsList>
-          <Tab>One</Tab>
-          <Tab>Two</Tab>
-          <Tab>Three</Tab>
-        </TabsList>
-      </TabsUnstyled>
-
-      <p>Selection independent of focus (default behavior):</p>
-      <TabsUnstyled
-        defaultValue={0}
-        aria-label="Tabs where selection does not follow focus"
-      >
-        <TabsList>
-          <Tab>One</Tab>
-          <Tab>Two</Tab>
-          <Tab>Three</Tab>
-        </TabsList>
-      </TabsUnstyled>
-    </div>
-  );
-}
+  box-shadow: 0px 4px 8px ${theme.palette.mode === 'dark' ? grey[900] : grey[200]};
+  `,
+);

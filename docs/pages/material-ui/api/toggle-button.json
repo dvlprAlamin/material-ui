@@ -2,7 +2,7 @@
   "props": {
     "value": { "type": { "name": "any" }, "required": true },
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "cssApi": true } },
     "color": {
       "type": {
         "name": "union",
@@ -10,12 +10,24 @@
       },
       "default": "'standard'"
     },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFocusRipple": { "type": { "name": "bool" } },
-    "disableRipple": { "type": { "name": "bool" } },
-    "fullWidth": { "type": { "name": "bool" } },
-    "onChange": { "type": { "name": "func" } },
-    "onClick": { "type": { "name": "func" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFocusRipple": { "type": { "name": "bool" }, "default": "false" },
+    "disableRipple": { "type": { "name": "bool" }, "default": "false" },
+    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLElement>, value: any) => void",
+        "describedArgs": ["event", "value"]
+      }
+    },
+    "onClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLElement>, value: any) => void",
+        "describedArgs": ["event", "value"]
+      }
+    },
     "selected": { "type": { "name": "bool" } },
     "size": {
       "type": {
@@ -28,7 +40,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "name": "ToggleButton",
@@ -48,9 +61,11 @@
     "name": "MuiToggleButton"
   },
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiToggleButton",
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/mui-material/src/ToggleButton/ToggleButton.js",
   "inheritance": { "component": "ButtonBase", "pathname": "/material-ui/api/button-base/" },
-  "demos": "<ul><li><a href=\"/material-ui/react-toggle-button/\">Toggle button</a></li></ul>",
+  "demos": "<ul><li><a href=\"/material-ui/react-toggle-button/\">Toggle Button</a></li></ul>",
   "cssComponent": false
 }

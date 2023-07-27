@@ -51,7 +51,7 @@ function sizeSnapshot(options) {
       // eslint-disable-next-line no-console -- purpose of this plugin
       console.info(infoString);
       // TODO: Should lock `snapshotPath` since something else might write to `snapshotPath` between read and write
-      const snapshotContent = await fs.readFile(snapshotPath, { encoding: 'utf-8' }).then(
+      const snapshotContent = await fs.readFile(snapshotPath, { encoding: 'utf8' }).then(
         (json) => {
           return JSON.parse(json);
         },
@@ -100,10 +100,6 @@ const nestedFolder = {
 
     if (importee.indexOf('@mui/private-theming/') === 0) {
       return resolveNestedImport('mui-private-theming', importee);
-    }
-
-    if (importee.indexOf('@mui/private-classnames/') === 0) {
-      return resolveNestedImport('mui-private-classnames', importee);
     }
 
     if (importee.indexOf('@mui/styled-engine/') === 0) {
@@ -158,6 +154,9 @@ const nodeOptions = {
 };
 
 function onwarn(warning) {
+  if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+    return;
+  }
   if (
     warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
     warning.source === 'react' &&
@@ -184,6 +183,7 @@ export default [
       format: 'umd',
       name: 'MaterialUI',
       globals,
+      intro: "'use client';",
     },
     external: Object.keys(globals),
     plugins: [
@@ -203,6 +203,7 @@ export default [
       format: 'umd',
       name: 'MaterialUI',
       globals,
+      intro: "'use client';",
     },
     external: Object.keys(globals),
     plugins: [

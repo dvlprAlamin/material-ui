@@ -5,29 +5,35 @@ import Button from '@mui/material/Button';
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
 import ContentCopyRounded from '@mui/icons-material/ContentCopyRounded';
 import CheckRounded from '@mui/icons-material/CheckRounded';
-import ROUTES from 'docs/src/route';
 import Link from 'docs/src/modules/components/Link';
 
-export default function GetStartedButtons({
-  installation = 'npm install @mui/material @emotion/react @emotion/styled',
-  to = ROUTES.documentation,
-  ...props
-}: { installation?: string; to?: string } & BoxProps) {
+interface GetStartedButtonsProps extends BoxProps {
+  callToAction?: string;
+  installation?: string;
+  to: string;
+}
+
+export default function GetStartedButtons(props: GetStartedButtonsProps) {
   const [copied, setCopied] = React.useState(false);
+  const { installation, callToAction = 'Get started', to, ...other } = props;
+
   const handleCopy = () => {
     setCopied(true);
-    copy(installation).then(() => {
+    copy(installation!).then(() => {
       setTimeout(() => setCopied(false), 2000);
     });
   };
+
   return (
     <Box
-      {...props}
+      {...other}
       sx={{
         display: 'flex',
-        flexWrap: 'wrap',
-        '&& > *': { minWidth: 'clamp(0px, (492px - 100%) * 999 ,100%)' },
-        ...props.sx,
+        flexWrap: { xs: 'wrap', md: 'nowrap' },
+        '&& > *': {
+          minWidth: { xs: '100%', md: '0%' },
+        },
+        ...other.sx,
       }}
     >
       <Button
@@ -37,30 +43,35 @@ export default function GetStartedButtons({
         size="large"
         variant="contained"
         endIcon={<KeyboardArrowRightRounded />}
-        sx={{ mr: { xs: 0, sm: 2 } }}
-      >
-        Get started
-      </Button>
-      <Box sx={{ py: 1, display: { xs: 'block', sm: 'hidden' } }} />
-      <Button
-        size="large"
-        // @ts-expect-error
-        variant="code"
-        endIcon={copied ? <CheckRounded color="primary" /> : <ContentCopyRounded />}
-        onClick={handleCopy}
         sx={{
-          maxWidth: '324px',
-          display: 'inline-block',
-          justifyContent: 'start',
-          overflowX: 'hidden',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-          position: 'relative',
-          pr: 5,
+          flexShrink: 0,
+          mr: { xs: 0, md: 2 },
+          mb: { xs: 2, md: 0 },
         }}
       >
-        {installation}
+        {callToAction}
       </Button>
+      {installation ? (
+        <Button
+          size="large"
+          // @ts-expect-error
+          variant="codeOutlined"
+          endIcon={copied ? <CheckRounded color="primary" /> : <ContentCopyRounded />}
+          onClick={handleCopy}
+          sx={{
+            maxWidth: '324px',
+            display: 'inline-block',
+            justifyContent: 'start',
+            overflowX: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            position: 'relative',
+            pr: 5,
+          }}
+        >
+          {installation}
+        </Button>
+      ) : null}
     </Box>
   );
 }
